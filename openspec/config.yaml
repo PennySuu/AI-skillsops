@@ -1,0 +1,440 @@
+schema: spec-driven
+
+context: |
+  语言：所有生成的文档（包括 spec.md、proposal.md、design.md、tasks.md 等）都必须使用中文编写
+  项目技术栈：
+  - 后端：Java 17 + Spring Boot 3.3.x + MyBatis + Maven
+  - 数据库：MySQL 8.0+ + Redis 7.0+
+  - 前端：Vue 3 + TypeScript + Vite + ESLint+ Node 20.19+
+  - 文档：Markdown 
+  项目目录：
+  - backend/
+  - frontend/
+  - doc/
+  - openspec/
+  规范目标：
+  - 采用 API-first 的 SDD 开发方式
+  - 强化 RESTful API 设计、统一响应格式、版本管理、向后兼容
+  - 规范后端 Spring 代码、前端 Vue 组件和测试
+  - 保证文档与变更记录同步、可审计
+
+rules:
+  # ============================================================
+  # 共享规范（前后端统一遵循）
+  # ============================================================
+  shared:
+    # ---------- 安全规范 ----------
+    security:
+      - description: "敏感数据传输必须加密"
+        rules:
+          - "所有网络通信必须基于 HTTPS"
+          - "密码传输：前端 SHA-256 加盐 → 后端 BCrypt/Argon2 存储"
+          - "敏感信息（身份证、银行卡）使用 RSA 端到端加密或 AES-256 存储加密"
+          - "Session 凭证通过 HTTPOnly Cookie 携带，禁止存储于 LocalStorage"
+          - "日志和异常信息中敏感数据必须脱敏（密码、Token、身份证号等）"
+      - description: "Web 安全风险防范"
+        rules:
+          - "XSS：所有用户输入进行输出编码，禁止直接渲染未校验内容"
+          - "CSRF：变更操作使用 CSRF Token 或 SameSite Cookie"
+          - "SQL 注入：使用参数化 SQL（#{}），禁止拼接（${}）"
+          - "Session：明确会话生成、刷新、失效逻辑，防止会话固定和劫持"
+      - description: "凭证与密钥管理"
+        rules:
+          - "禁止硬编码，通过环境变量或配置中心注入"
+          - "定期轮换，建立泄露应急响应流程"
+          - "测试与生产环境使用不同凭证"
+
+    # ---------- 错误码体系 ----------
+    error_codes:
+      - description: "统一错误码命名和分类"
+        rules:
+          - "命名格式：MODULE_ERROR_TYPE（大写下划线）"
+          - "模块前缀：AUTH_*、USER_*、ORDER_*、SYSTEM_*"
+          - "通用错误码：VALIDATION_FAILED、RESOURCE_NOT_FOUND、PERMISSION_DENIED、OPERATION_FAILED"
+        examples:
+          - { code: AUTH_TOKEN_EXPIRED, message: "登录凭证已过期，请重新登录" }
+          - { code: USER_NOT_FOUND, message: "用户不存在" }
+          - { code: VALIDATION_FAILED, message: "参数验证失败" }
+      - description: "HTTP 状态码与错误码映射"
+        rules:
+          - "401 → AUTH_* 错误，前端跳转登录页"
+          - "403 → PERMISSION_DENIED，提示权限不足"
+          - "404 → RESOURCE_NOT_FOUND"
+          - "422 → VALIDATION_FAILED，显示具体校验错误"
+          - "429 → RATE_LIMIT_EXCEEDED，读取 Retry-After 重试"
+          - "500 → SYSTEM_* 错误，提示服务器异常"
+
+    # ---------- 代码风格规范 ----------
+    code_style:
+      - description: "命名规范（前后端统一）"
+        rules:
+          - "类/组件/类型：PascalCase（UserProfile、OrderDTO）"
+          - "变量/函数/方法：camelCase（userName、getUserList）"
+          - "常量：UPPER_SNAKE_CASE（MAX_PAGE_SIZE）"
+          - "布尔命名：is/has/can/should 前缀"
+      - description: "SOLID 原则"
+        rules:
+          - "单一职责原则（SRP）：每个类只负责一项职责，变更原因应唯一"
+          - "开闭原则（OCP）：对扩展开放，对修改关闭，优先通过抽象和多态扩展功能"
+          - "里氏替换原则（LSP）：子类应能完全替代父类使用，不应破坏父类契约"
+          - "接口隔离原则（ISP）：接口应细粒度拆分，客户端不应依赖不需要的方法"
+          - "依赖倒置原则（DIP）：高层模块不应依赖低层模块，两者都应依赖抽象"
+      - description: "代码复杂度控制"
+        rules:
+          - "函数/方法不超过 50 行"
+          - "类/组件不超过 500 行（Vue 组件 300 行）"
+          - "参数不超过 5 个（前端 4 个），超过封装为对象"
+          - "嵌套层级不超过 3 层"
+          - "圈复杂度 < 10"
+      - description: "注释规范"
+        rules:
+          - "公共 API 必须包含文档注释（Javadoc / JSDoc）"
+          - "注释说明 why 而非 what"
+          - "TODO/FIXME 格式：// TODO(author): description - YYYY-MM-DD"
+          - "禁止提交被注释的死代码"
+          - "废弃代码使用 @Deprecated / @deprecated 标注替代方案"
+
+    # ---------- 测试规范 ----------
+    testing:
+      - description: "覆盖率要求"
+        rules:
+          - "单元测试覆盖率 ≥ 70%，核心模块 ≥ 85%"
+          - "后端：JUnit + Mockito，前端：Vitest + @vue/test-utils"
+          - "集成测试覆盖 API 层、数据库操作、缓存操作"
+          - "E2E 测试覆盖关键用户流程（Playwright/Cypress）"
+      - description: "测试原则"
+        rules:
+          - "遵循 FIRST 原则：Fast、Independent、Repeatable、Self-validating、Timely"
+          - "遵循 AAA 模式：Arrange-Act-Assert"
+          - "Mock 外部依赖，保持测试隔离"
+          - "测试行为和结果，避免测试实现细节"
+      - description: "命名规范"
+        rules:
+          - "后端：should_returnUser_when_userExists()"
+          - "前端：it('should display user list when data loaded')"
+
+  # ============================================================
+  # API 设计规范（契约层，前后端共同遵守）
+  # ============================================================
+  api:
+    # ---------- RESTful 设计 ----------
+    - description: "RESTful 路径设计"
+      rules:
+        - "使用复数资源名：/v1/users、/v1/orders/{orderId}/items"
+        - "避免动词，特殊操作用子资源：/v1/orders/{orderId}/cancel"
+        - "统一版本前缀：/v1/、/v2/"
+      examples:
+        - "/v1/users"
+        - "/v1/orders/{orderId}/items"
+
+    # ---------- 统一响应格式 ----------
+    - description: "响应 envelope 结构"
+      response:
+        success: boolean
+        code: string
+        message: string
+        data: object
+      rules:
+        - "success: true 时 data 包含业务数据"
+        - "success: false 时 code 为错误码，message 为用户提示"
+
+    # ---------- 分页、排序、过滤 ----------
+    - description: "分页参数"
+      request:
+        query:
+          page: { description: "页码", default: 0 }
+          size: { description: "每页数量", default: 10 }
+      response:
+        page: integer
+        size: integer
+        total: integer
+        items: array
+    - description: "排序参数"
+      request:
+        query:
+          sort: { description: "格式：field,asc|desc", examples: ["sort=createdAt,desc"] }
+    - description: "过滤参数"
+      rules:
+        - "等值：?status=active"
+        - "范围：?price[gte]=100&price[lte]=500"
+        - "模糊：?name[like]=张 或 ?q=关键词"
+        - "多值：?status=active,pending"
+
+    # ---------- HTTP 状态码 ----------
+    - description: "状态码语义"
+      rules:
+        - "200 OK：成功 | 201 Created：创建成功 | 204 No Content：删除成功"
+        - "400 Bad Request：参数错误 | 401 Unauthorized：认证失败"
+        - "403 Forbidden：权限不足 | 404 Not Found：资源不存在"
+        - "409 Conflict：数据冲突 | 422 Unprocessable Entity：业务校验失败"
+        - "429 Too Many Requests：限流 | 500 Internal Server Error：服务端异常"
+
+    # ---------- 请求头规范 ----------
+    - description: "请求头"
+      rules:
+        - "Content-Type: application/json"
+        - "X-Request-ID：客户端生成 UUID，全链路追踪"
+        - "Idempotency-Key：POST 操作幂等性保障（关键业务必须）"
+        - "Authorization: Bearer {token} 或 Cookie 自动携带"
+    - description: "响应头"
+      rules:
+        - "X-Request-ID：回传请求 ID"
+        - "X-Response-Time：响应耗时（ms）"
+        - "限流头：Retry-After、X-RateLimit-Limit/Remaining/Reset"
+
+    # ---------- 批量操作 ----------
+    - description: "批量操作规范"
+      rules:
+        - "批量创建：POST /v1/resources/batch，请求体为数组"
+        - "批量删除：DELETE /v1/resources/batch，请求体 {ids: [...]}"
+        - "单次上限 100 条，返回每条处理结果"
+
+    # ---------- 文件上传 ----------
+    - description: "文件上传规范"
+      rules:
+        - "格式：multipart/form-data"
+        - "路径：POST /v1/files"
+        - "响应：{id, url, size, mimeType}"
+        - "大文件支持分片上传"
+
+    # ---------- 版本兼容 ----------
+    - description: "版本兼容策略"
+      rules:
+        - "新增字段保持向后兼容"
+        - "不兼容变更发布新版本（/v2/）"
+        - "废弃接口标注 deprecated，保留过渡期"
+
+  # ============================================================
+  # 后端实现规范（Java/Spring/MyBatis）
+  # ============================================================
+  backend:
+    # ---------- 架构分层 ----------
+    - description: "分层架构"
+      rules:
+        - "Controller：参数校验、请求转发、响应封装，禁止业务逻辑"
+        - "Service：业务逻辑、事务边界，协调 Repository"
+        - "Repository/DAO：数据持久化，禁止业务判断"
+        - "调用方向：Controller → Service → Repository，禁止反向"
+    - description: "包结构"
+      rules:
+        - "按领域划分：com.company.app.{domain}.{layer}"
+        - "公共组件：common.exception、common.util、infrastructure.config"
+      examples:
+        - "com.company.app.user.controller"
+        - "com.company.app.user.service"
+
+    # ---------- Spring 规范 ----------
+    - description: "依赖注入"
+      rules:
+        - "优先构造器注入（@RequiredArgsConstructor）"
+        - "面向接口编程，Service 定义接口"
+        - "避免循环依赖"
+    - description: "异常处理"
+      rules:
+        - "自定义异常继承 RuntimeException，按业务域分类"
+        - "@ControllerAdvice 统一处理，映射到 API 错误响应"
+        - "禁止空 catch 块"
+
+    # ---------- MyBatis 规范 ----------
+    - description: "Mapper 规范"
+      rules:
+        - "命名：UserMapper，放置于 mapper 包"
+        - "方法命名：find*/select*/insert*/update*/delete*"
+        - "XML 放置于 resources/mapper/"
+    - description: "SQL 安全与性能"
+      rules:
+        - "参数绑定使用 #{}，禁止 ${} 拼接用户输入"
+        - "LIKE 查询：CONCAT('%', #{keyword}, '%')"
+        - "避免 SELECT *，显式列出字段"
+        - "批量操作使用 <foreach>，单次 ≤ 500 条"
+        - "关注 N+1 问题，优先 JOIN 或批量查询"
+
+    # ---------- 数据库设计 ----------
+    - description: "MySQL 建模"
+      rules:
+        - "主键策略：单体自增，分布式 UUID"
+        - "字段类型精确：varchar/int/decimal/datetime"
+        - "使用 NOT NULL、默认值、外键约束"
+        - "索引基于查询场景，关注过滤/关联/排序字段"
+        - "变更通过 Migration 管理，支持回滚"
+    - description: "Redis 缓存"
+      rules:
+        - "Key 格式：{业务域}:{子模块}:{标识}"
+        - "必须设置 TTL：Session 30min、接口缓存 5-60s、验证码 5min"
+      examples:
+        - "auth:session:userId"
+        - "product:cache:list"
+
+    # ---------- 生产化配置 ----------
+    - description: "环境配置"
+      rules:
+        - "Spring Profiles：dev/test/staging/prod"
+        - "敏感配置通过配置中心或环境变量注入"
+        - "推荐 Nacos/Apollo 管理生产配置"
+    - description: "健康检查与优雅停机"
+      rules:
+        - "启用 Actuator /health 端点"
+        - "配置 Liveness/Readiness Probe"
+        - "server.shutdown=graceful，超时 30s"
+    - description: "限流熔断"
+      rules:
+        - "接口限流：Resilience4j/Sentinel"
+        - "外部调用熔断：failureRateThreshold=50%"
+        - "核心业务提供降级方案"
+    - description: "资源配置"
+      rules:
+        - "HikariCP：maximum-pool-size=20，leak-detection-threshold=60s"
+        - "线程池：CPU 密集型 N+1，IO 密集型 2N"
+        - "日志：生产环境 INFO 级别，JSON 格式，异步写入"
+
+    # ---------- 监控可观测性 ----------
+    - description: "指标与追踪"
+      rules:
+        - "Micrometer + Prometheus 暴露 JVM/HTTP/连接池指标"
+        - "Micrometer Tracing 注入 Trace ID，对接 Jaeger/Zipkin"
+        - "告警：错误率 > 1%、P99 > 3s、连接池 > 80%"
+
+    # ---------- OpenAPI ----------
+    - description: "API 文档"
+      rules:
+        - "使用 SpringDoc/OpenAPI 注解生成文档"
+        - "DTO 与实体分离，不暴露数据库模型"
+
+  # ============================================================
+  # 前端实现规范（Vue 3/TypeScript/Vite）
+  # ============================================================
+  frontend:
+    # ---------- 项目结构 ----------
+    - description: "目录结构"
+      rules:
+        - "src/views/：页面组件（与路由对应）"
+        - "src/components/：可复用组件（common/ 放基础组件）"
+        - "src/composables/：组合式函数（use* 命名）"
+        - "src/stores/：Pinia 状态管理"
+        - "src/api/：API 封装（按资源域划分）"
+        - "src/types/：TypeScript 类型（与后端 DTO 对应）"
+        - "src/utils/：工具函数"
+    - description: "文件命名"
+      rules:
+        - "组件：PascalCase（UserProfile.vue）"
+        - "Composable：camelCase + use 前缀（useAuth.ts）"
+        - "类型：camelCase + .d.ts（user.d.ts）"
+
+    # ---------- Vue 组件设计 ----------
+    - description: "组件规范"
+      rules:
+        - "命名至少两个单词：UserProfile、OrderItem"
+        - "基础组件前缀：Base*/App*/V*"
+        - "单例组件前缀：The*"
+        - "使用 <script setup lang=\"ts\">"
+        - "单个组件不超过 300 行"
+    - description: "Props/Emits"
+      rules:
+        - "Props 必须 TypeScript 类型定义，禁止 any"
+        - "可选 Props 提供默认值"
+        - "Emits 使用 defineEmits 显式声明"
+        - "事件名 kebab-case：update:modelValue、item-click"
+
+    # ---------- API 对接（与后端契约对齐） ----------
+    - description: "API 封装"
+      rules:
+        - "Axios 统一实例：baseURL、timeout、withCredentials"
+        - "请求拦截器：自动添加 X-Request-ID、Content-Type"
+        - "响应拦截器：解析 {success, code, message, data}"
+        - "API 函数返回 Promise<T>，T 为业务类型"
+      examples:
+        - "export const getUser = (id: number): Promise<UserDTO> => request.get(`/users/${id}`)"
+    - description: "请求参数对齐"
+      rules:
+        - "分页：page/size，排序：sort=field,asc|desc"
+        - "过滤：status=active、price[gte]=100"
+        - "关键操作传递 Idempotency-Key"
+
+    # ---------- TypeScript 类型 ----------
+    - description: "类型规范"
+      rules:
+        - "类型命名与后端 DTO 一致：UserDTO、CreateOrderRequest"
+        - "统一响应：ApiResponse<T> = { success, code, message, data: T }"
+        - "分页响应：PageResponse<T> = { page, size, total, items: T[] }"
+        - "启用 strict: true，禁止 any 和 @ts-ignore"
+
+    # ---------- JSDoc 注释 ----------
+    - description: "JSDoc 规范"
+      rules:
+        - "工具函数、API 函数、Composable 必须包含 JSDoc"
+        - "使用 @param、@returns、@throws、@example"
+        - "类型字段添加注释说明含义"
+      examples:
+        - |
+          /**
+           * 获取用户详情
+           * @param id - 用户 ID
+           * @returns 用户详情信息
+           * @throws USER_NOT_FOUND - 用户不存在
+           */
+          export const getUser = (id: number): Promise<UserDTO>
+        - |
+          /** 用户数据传输对象 */
+          interface UserDTO {
+            /** 用户唯一标识 */
+            id: number
+            /** 用户名，唯一 */
+            username: string
+          }
+
+    # ---------- 状态管理 ----------
+    - description: "Pinia 规范"
+      rules:
+        - "仅跨组件共享状态放入 Store"
+        - "Store 按业务域划分：useUserStore"
+        - "state 用工厂函数，getters 保持纯函数"
+        - "异步操作在 actions 中处理"
+
+    # ---------- 错误处理 ----------
+    - description: "错误处理规范"
+      rules:
+        - "全局：app.config.errorHandler + window.onerror"
+        - "API 错误按状态码分类处理（参见 shared.error_codes）"
+        - "生产环境错误上报 Sentry/Fundebug"
+        - "表单校验规则与后端保持一致"
+
+    # ---------- 性能优化 ----------
+    - description: "加载优化"
+      rules:
+        - "路由懒加载：() => import('./views/User.vue')"
+        - "第三方库按需引入"
+        - "图片懒加载，使用 WebP 格式"
+    - description: "运行时优化"
+      rules:
+        - "列表 :key 使用唯一标识，禁止 index"
+        - "大列表使用虚拟滚动"
+        - "避免模板中调用函数，使用 computed"
+    - description: "构建优化"
+      rules:
+        - "Vite manualChunks 分离 vendor"
+        - "启用 gzip/brotli 压缩"
+
+    # ---------- 前端监控 ----------
+    - description: "监控规范"
+      rules:
+        - "错误监控：Sentry，关联 X-Request-ID"
+        - "性能指标：LCP < 2.5s、FID < 100ms、CLS < 0.1"
+        - "埋点命名：{page}_{action}_{target}"
+
+  # ============================================================
+  # 文档规范
+  # ============================================================
+  doc:
+    - description: "规范变更需同步更新文档和变更日志"
+    - description: "文档应说明 API 版本、兼容策略、废弃说明"
+    - description: "SDD 规范保存在 openspec/specs/"
+    - description: "变更文档保存在 doc/，包含更新原因和影响范围"
+
+# ============================================================
+# 开发指引
+# ============================================================
+guidance:
+  - description: "规范驱动开发：开发前先在 openspec/specs/ 生成/确认 API 规范"
+  - description: "变更代码前，先更新 SDD 规范；变更后同步更新 doc/"
+  - description: "后端、前端实现代码应与 openspec 规范保持一致"
+  - description: "前后端类型定义应同步更新，保持契约一致"
