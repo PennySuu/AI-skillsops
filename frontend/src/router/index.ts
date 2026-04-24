@@ -26,7 +26,13 @@ const router = createRouter({
     {
       path: '/market',
       name: 'market',
-      component: () => import('@/views/PlaceholderHomeView.vue'),
+      component: () => import('@/views/MarketView.vue'),
+      meta: { requiresAuth: true } satisfies AppRouteMeta,
+    },
+    {
+      path: '/skills/:skillId',
+      name: 'skillDetail',
+      component: () => import('@/views/SkillDetailView.vue'),
       meta: { requiresAuth: true } satisfies AppRouteMeta,
     },
     {
