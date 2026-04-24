@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -127,6 +128,81 @@ class MarketInstallIntegrationTest {
         BusinessException expired = assertThrows(BusinessException.class,
                 () -> installCommandService.consumeInstallToken("missing-token-" + token, 202L));
         assertEquals(ErrorCode.OPERATION_FAILED, expired.getErrorCode());
+    }
+
+    @Test
+    void shouldRejectRatingWhenUserNotInstalled() throws Exception {
+        String token = "rating-uninstalled-" + Instant.now().toEpochMilli();
+        String skillName = "skill-rating-uninstalled-" + token;
+        CsrfContext csrf = fetchCsrf();
+        MockHttpSession authorSession = userSession(302L, "USER");
+        MockHttpSession adminSession = userSession(9001L, "ADMIN");
+        Long skillId = createPublishedSkill(skillName, authorSession, adminSession, csrf);
+
+        mockMvc.perform(put("/v1/skills/{skillId}/ratings", skillId)
+                        .session(authorSession)
+                        .cookie(csrf.cookie())
+                        .header("X-CSRF-Token", csrf.token())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"score":5,"comment":"great"}
+                                """))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.code").value("RATING_REQUIRES_INSTALL"));
+    }
+
+    @Test
+    void shouldUpdateRatingByUpsertAndReflectInDetail() throws Exception {
+        String token = "rating-upsert-" + Instant.now().toEpochMilli();
+        String skillName = "skill-rating-upsert-" + token;
+        CsrfContext csrf = fetchCsrf();
+        MockHttpSession authorSession = userSession(402L, "USER");
+        MockHttpSession adminSession = userSession(9001L, "ADMIN");
+        Long skillId = createPublishedSkill(skillName, authorSession, adminSession, csrf);
+
+        jdbcTemplate.update(
+                "INSERT INTO install_record (user_id, skill_id, installed_version) VALUES (?, ?, ?)",
+                402L,
+                skillId,
+                "1.0.0");
+
+        mockMvc.perform(put("/v1/skills/{skillId}/ratings", skillId)
+                        .session(authorSession)
+                        .cookie(csrf.cookie())
+                        .header("X-CSRF-Token", csrf.token())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"score":4,"comment":"good"}
+                                """))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(put("/v1/skills/{skillId}/ratings", skillId)
+                        .session(authorSession)
+                        .cookie(csrf.cookie())
+                        .header("X-CSRF-Token", csrf.token())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"score":5,"comment":"excellent"}
+                                """))
+                .andExpect(status().isOk());
+
+        Integer score = jdbcTemplate.queryForObject(
+                "SELECT score FROM rating WHERE user_id = ? AND skill_id = ?",
+                Integer.class,
+                402L,
+                skillId);
+        Long count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(1) FROM rating WHERE user_id = ? AND skill_id = ?",
+                Long.class,
+                402L,
+                skillId);
+        assertEquals(5, score);
+        assertEquals(1L, count);
+
+        mockMvc.perform(get("/v1/market/skills/{skillId}", skillId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.avgRating").value(5.0))
+                .andExpect(jsonPath("$.data.ratingCount").value(1));
     }
 
     private Long createPublishedSkill(
