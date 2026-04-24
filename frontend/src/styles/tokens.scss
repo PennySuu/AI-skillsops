@@ -1,0 +1,18 @@
+/* 与产品主色对齐的设计 token（全局 CSS 变量，供布局与业务组件复用） */
+$color-primary: #2f6bff;
+
+:root {
+  --skillsops-color-primary: #{$color-primary};
+}
+
+body {
+  margin: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+}

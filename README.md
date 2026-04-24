@@ -34,6 +34,8 @@ mvn -B spring-boot:run
 
 3. **Flyway**：应用启动时自动执行 `src/main/resources/db/migration`。**生产**仅做 `migrate`，已通过 `clean-disabled` 禁止 `clean`；是否执行迁移可用环境变量 `SKILLSOPS_FLYWAY_ENABLED`（默认 `true`）配合发布流水线窗口控制。
 
+4. **Maven 测试**：`mvn -B verify` 包含 `SkillsOpsApplicationSmokeTest`（Testcontainers MySQL + Flyway）。**本机已安装并运行 Docker** 时该用例会执行；无 Docker 时用例按条件 **跳过**（其余单元测试仍会跑）。CI 环境应提供 Docker 以覆盖集成冒烟。
+
 **常用环境变量（dev 可有默认值，prod 必填项勿留空）**
 
 | 变量 | 含义 |
@@ -50,10 +52,26 @@ mvn -B spring-boot:run
 ### 前端
 
 - Vue 3
-- TypeScript
-- Vite
-- ESLint
-- Node.js 20.19+
+- TypeScript（`strict`）
+- Vite 5
+- Vue Router、Pinia
+- Naive UI、Sass（含 CSS Modules 基座）
+- ESLint（`vue` + `@typescript-eslint`）与 Prettier
+- Node.js 20.19+（本地 **22.x** 亦可）
+
+**脚本（`frontend/`，包管理统一 `npm`）**
+
+| 命令 | 说明 |
+|------|------|
+| `npm install` | 安装依赖 |
+| `npm run dev` | 开发（`development`，默认走 `vite.config.ts` 中的 `server.proxy`） |
+| `npm run build` | 生产构建（先 `vue-tsc` 再 `vite build`） |
+| `npm run preview` | 预览构建产物 |
+| `npm run lint` | ESLint |
+| `npm run format` | Prettier 写入格式化 |
+| `npm run typecheck` | 仅类型检查 |
+
+**环境变量**：见 `frontend/.env.example`；`VITE_*` 在 `src/env.d.ts` 中有类型声明。开发下 `VITE_API_BASE_URL` 与代理前缀对齐（默认 `/v1`），生产构建需设置真实的 `VITE_API_BASE_URL`（完整 API 根路径）。
 
 ### 文档与规范
 

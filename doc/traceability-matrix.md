@@ -70,10 +70,10 @@
 | API-002 | 后端/config | 请求头：`X-Request-ID`、`Idempotency-Key`、CSRF | `auth-session-security` | 统一拦截器/过滤器 | axios 请求拦截器 | 头注入与校验测试 | 2.2,3.1,5.2 | 未开始 |
 | API-003 | 后端 | 异常码映射（401/403/409/422/429） | `auth-session-security` + 其他 specs | 错误码枚举与抛出 | 错误消息映射 | BE 异常映射测试 | 1.1.3,2.1,3.5 | 进行中 |
 | ENV-001 | 你的新增要求 | 后端至少 dev/prod 两套配置 | `tasks` 环境要求 | `application-dev/prod.yml` | 无 | 启动验证 | 1.1.4 | 已完成 |
-| ENV-002 | 你的新增要求 | 前端至少 development/production 两套配置 | `tasks` 环境要求 | 无 | `.env.development/.env.production` | 构建验证 | 1.2.2,1.2.3 | 未开始 |
+| ENV-002 | 你的新增要求 | 前端至少 development/production 两套配置 | `tasks` 环境要求 | 无 | `.env.development/.env.production` | 构建验证 | 1.2.2,1.2.3 | 已完成 |
 | ENV-003 | 你的新增要求 | Java 包名禁止 example | `tasks` 包名要求 | `com.skillsops` 包路径 | 无 | 静态检查 | 1.1.2 | 已完成 |
-| ENV-004 | 你的新增要求 | 本地启动自动初始化表结构 | `tasks` Flyway 要求 | Flyway auto-migrate | 无 | `@SpringBootTest` 验证 | 1.1.5,1.3.1 | 进行中 |
-| NFR-001 | 前端/后端评审 | CI 门禁（lint/typecheck/test/build, mvn verify） | `tasks` CI 要求 | Maven verify | FE pipeline | CI 结果 | 1.3.4 | 未开始 |
+| ENV-004 | 你的新增要求 | 本地启动自动初始化表结构 | `tasks` Flyway 要求 | Flyway auto-migrate | 无 | `@SpringBootTest` 验证 | 1.1.5,1.3.1 | 已完成 |
+| NFR-001 | 前端/后端评审 | CI 门禁（lint/typecheck/test/build, mvn verify） | `tasks` CI 要求 | Maven verify | FE pipeline | CI 结果 | 1.3.4 | 已完成 |
 | NFR-002 | 后端评审 | 可观测性（Actuator/Prometheus/日志） | `design` D7 + `tasks` | Micrometer + JSON 日志 | 前端错误上报对接 | 监控冒烟 | 8.1,8.2 | 未开始 |
 | NFR-003 | 前端评审 | 错误监控与 Web Vitals | `tasks` 非功能 | 无 | Sentry + 指标采集 | FE 冒烟 | 8.2 | 未开始 |
 | NFR-004 | 产品/前端评审 | 错误态/空态/重试一致交互 | `market-install-rating` + `workspace-admin-operations` | 错误码语义 | BaseErrorBlock/BaseEmpty | FE 组件与 E2E | 5.4,7.3 | 未开始 |

@@ -35,18 +35,18 @@ node scripts/verify-traceability.mjs
 
 ### 1.2 前端：Vite + Vue 工程骨架
 
-- [ ] 1.2.1 在 `frontend/` 建立 **Vite 5 + Vue 3 + TypeScript（strict）+ Vue Router + Pinia**；ESLint（`vue` + `@typescript-eslint`）+ 格式化工具；目录对齐 `config.yaml`（`api/`、`views/`、`components/`、`composables/`、`stores/`）
-- [ ] 1.2.2 配置 **多环境**：**`.env.development`**、**`.env.production`**，以及 **`.env.example`**（无密钥，仅键名说明）；`VITE_API_BASE_URL` 等在 `import.meta.env` 中类型声明（`env.d.ts`）
-- [ ] 1.2.3 `vite.config.ts` 按 `mode` 区分 **`server.proxy`（开发）** 与 **生产 `base`/CDN** 策略；构建产物含 `sourcemap` 策略说明（prod 可选关闭以减体积）
-- [ ] 1.2.4 接入 **Naive UI**、全局样式 Tokens（Sass + CSS Modules 基座）、`layouts/` 默认布局（顶栏 + 内容区）
-- [ ] 1.2.5 在 **`README.md`** 中编写**前端**章节：Node 版本、**`npm`** 脚本（安装与 `development`/`production` 构建、预览）、环境变量说明（**不**单独维护 `README-frontend.md`；包管理统一 **`npm`**，不用 pnpm）
+- [x] 1.2.1 在 `frontend/` 建立 **Vite 5 + Vue 3 + TypeScript（strict）+ Vue Router + Pinia**；ESLint（`vue` + `@typescript-eslint`）+ 格式化工具；目录对齐 `config.yaml`（`api/`、`views/`、`components/`、`composables/`、`stores/`）
+- [x] 1.2.2 配置 **多环境**：**`.env.development`**、**`.env.production`**，以及 **`.env.example`**（无密钥，仅键名说明）；`VITE_API_BASE_URL` 等在 `import.meta.env` 中类型声明（`env.d.ts`）
+- [x] 1.2.3 `vite.config.ts` 按 `mode` 区分 **`server.proxy`（开发）** 与 **生产 `base`/CDN** 策略；构建产物含 `sourcemap` 策略说明（prod 可选关闭以减体积）
+- [x] 1.2.4 接入 **Naive UI**、全局样式 Tokens（Sass + CSS Modules 基座）、`layouts/` 默认布局（顶栏 + 内容区）
+- [x] 1.2.5 在 **`README.md`** 中编写**前端**章节：Node 版本、**`npm`** 脚本（安装与 `development`/`production` 构建、预览）、环境变量说明（**不**单独维护 `README-frontend.md`；包管理统一 **`npm`**，不用 pnpm）
 
 ### 1.3 测试与 CI 基线
 
-- [ ] 1.3.1 后端：添加 **`src/test/resources/application-test.yml`**（独立内存库 **或** Testcontainers MySQL）；**`@SpringBootTest`** 冒烟测试验证 **应用上下文加载 + Flyway 在测试环境执行成功**
-- [ ] 1.3.2 后端：接入 **Surefire**，约定测试命名与 `config.yaml` testing 章节一致；核心工具类与异常映射单元测试样例
-- [ ] 1.3.3 前端：配置 **Vitest** + `@vue/test-utils`；**示例**：布局或根组件挂载冒烟测试；`package.json` 脚本 `test` / `test:coverage`
-- [ ] 1.3.4 仓库根目录添加 **CI 工作流**（GitHub Actions / 团队等价物）：**后端** `mvn -B verify`；**前端** `lint + typecheck + test + build`；**并执行** `node scripts/verify-traceability.mjs`；失败即阻断合并
+- [x] 1.3.1 后端：添加 **`src/test/resources/application-test.yml`**（独立内存库 **或** Testcontainers MySQL）；**`@SpringBootTest`** 冒烟测试验证 **应用上下文加载 + Flyway 在测试环境执行成功**
+- [x] 1.3.2 后端：接入 **Surefire**，约定测试命名与 `config.yaml` testing 章节一致；核心工具类与异常映射单元测试样例
+- [x] 1.3.3 前端：配置 **Vitest** + `@vue/test-utils`；**示例**：布局或根组件挂载冒烟测试；`package.json` 脚本 `test` / `test:coverage`
+- [x] 1.3.4 仓库根目录添加 **CI 工作流**（GitHub Actions / 团队等价物）：**后端** `mvn -B verify`；**前端** `lint + typecheck + test + build`；**并执行** `node scripts/verify-traceability.mjs`；失败即阻断合并
 
 ### 1.4 文档一致性矩阵（强制门禁）
 
