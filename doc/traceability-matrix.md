@@ -40,7 +40,7 @@
 | MKT-004 | 产品 | 安装仅复制命令，不执行脚本 | `market-install-rating` 安装方式 | 安装命令签发接口 | 复制命令按钮 | FE clipboard 测试 | 5.2,5.5,5.6 | 未开始 |
 | MKT-005 | 产品/后端 | 安装命令短时签名、短TTL、单次可用 | `market-install-rating` 安装命令签发 | `POST /v1/skills/{skillId}/install-command` | 复制结果提示 | BE 过期/重复消费测试 | 5.2,5.5,5.6 | 未开始 |
 | MKT-006 | 产品 | 下架后市场不可见 | `market-install-rating` 下架可见性 | 下架状态过滤 | 列表不可见分支 | E2E 下架后不可见 | 5.1,5.4,5.6 | 进行中 |
-| MKT-007 | 产品/后端 | 下架后已安装可查看但不可装历史版本 | `market-install-rating` + `skill-lifecycle-review` | 安装接口返回 `409 SKILL_OFFLINE_NOT_INSTALLABLE` | 我的安装显示“已下架”、禁安装 | BE 错误码测试；FE 按钮禁用 | 5.2,5.3,5.5,6.3 | 未开始 |
+| MKT-007 | 产品/后端 | 下架后已安装可查看但不可装历史版本 | `market-install-rating` + `skill-lifecycle-review` | 安装接口返回 `409 SKILL_OFFLINE_NOT_INSTALLABLE` | 我的安装显示“已下架”、禁安装 | BE 错误码测试；FE 按钮禁用 | 5.2,5.3,5.5,6.3 | 进行中 |
 | MKT-008 | 产品 | 详情安装量/均分写后 <=5s | `market-install-rating` 近实时口径 | 写后失效+回查 | 详情页刷新策略 | E2E 轮询断言 | 6.1,6.2,6.3,8.4 | 未开始 |
 | RAT-001 | 产品 | 仅安装后可评分 | `market-install-rating` 评分前置条件 | `422 RATING_REQUIRES_INSTALL` | 评分入口拦截 | BE 未安装拒绝；FE 引导 | 6.1,6.2,6.3 | 未开始 |
 | RAT-002 | 产品 | 一人一评，可修改 | `market-install-rating` 评分更新 | `uk_user_skill` + update | 评分编辑覆盖 | BE upsert；FE 回显更新 | 6.1,6.2,6.3 | 未开始 |
@@ -53,14 +53,14 @@
 | LIFE-006 | 产品/后端 | 审核通过 | `skill-lifecycle-review` 审核通过 | `POST /v1/reviews/{reviewId}/approve` | 审核通过按钮 | BE published；FE 刷新 | 4.3,4.5,4.6 | 已完成 |
 | LIFE-007 | 产品/后端 | 审核拒绝且理由 10-200 | `skill-lifecycle-review` 审核拒绝 | `POST /v1/reviews/{reviewId}/reject` | 拒绝理由弹窗校验 | BE 长度校验；FE 表单校验 | 4.3,4.5,4.6 | 已完成 |
 | LIFE-008 | 产品/后端 | 发布新版本，版本号唯一 | `skill-lifecycle-review` 版本管理 | `POST /v1/skills/{skillId}/versions` + 409 | 发布版本弹窗 | BE 冲突测试；FE 错误提示 | 4.2,4.4,4.6 | 已完成 |
-| LIFE-009 | 后端 | 已上架 Skill 新版本默认无需复审 | `skill-lifecycle-review` 免复审策略 | 版本发布直接生效 | 前端可更新标记 | 集成测试流程 | 4.2,4.6,5.3 | 进行中 |
+| LIFE-009 | 后端 | 已上架 Skill 新版本默认无需复审 | `skill-lifecycle-review` 免复审策略 | 版本发布直接生效 | 前端可更新标记 | 集成测试流程 | 4.2,4.6,5.3 | 已完成 |
 | LIFE-010 | 产品 | 管理员下架需原因+二次确认 | `skill-lifecycle-review` 下架 | 下架接口记录 reason | 下架确认弹窗 | BE reason 校验；FE 弹窗 | 4.3,4.5,4.6 | 已完成 |
 | WS-001 | 产品/前端 | 工作台信息架构（发布/安装/审核/分类/统计） | `workspace-admin-operations` 路由结构 | 权限接口支持 | 菜单与侧边栏 | FE 路由快照测试 | 4.5,7.3 | 进行中 |
 | WS-002 | 前端 | `/market` 默认首页 | `workspace-admin-operations` 默认首页 | 登录后会话可用 | 登录成功跳转 `/market` | E2E 登录跳转 | 3.3,3.6 | 已完成 |
 | WS-003 | 前端 | `/workspace/reviews` 管理员路由 | `workspace-admin-operations` 路由守卫 | 403 权限返回 | `meta.roles` 守卫 | FE 守卫单测 | 3.4,4.5 | 已完成 |
 | WS-004 | 前端 | 菜单与路由同源（menu.config.ts） | `workspace-admin-operations` 菜单一致性 | 无 | 统一菜单配置 | FE 配置一致性测试 | 2.2,3.4,7.3 | 进行中 |
 | WS-005 | 产品 | 我的发布页（状态/编辑/提交/发布） | `workspace-admin-operations` 我的发布 | 相关 API 支撑 | `/workspace/published` 页面 | FE 页面流测试 | 4.4,4.6 | 已完成 |
-| WS-006 | 产品 | 我的安装页（版本、可更新、下架标） | `workspace-admin-operations` 我的安装 | `GET /v1/users/me/installs` | `/workspace/installed` 页面 | FE 渲染测试 | 5.3,5.5,5.6 | 未开始 |
+| WS-006 | 产品 | 我的安装页（版本、可更新、下架标） | `workspace-admin-operations` 我的安装 | `GET /v1/users/me/installs` | `/workspace/installed` 页面 | FE 渲染测试 | 5.3,5.5,5.6 | 进行中 |
 | CAT-001 | 产品/后端 | 分类管理 CRUD + 启停 | `workspace-admin-operations` 分类管理 | `/v1/admin/categories*` | `/workspace/categories` | BE CRUD 集成；FE 表单 | 7.1,7.3,7.4 | 未开始 |
 | CAT-002 | 产品 | 分类名唯一 | `workspace-admin-operations` 分类唯一性 | DB 唯一约束 + 409/422 | 重复名提示 | BE 重复名测试；FE 提示 | 7.1,7.3,7.4 | 未开始 |
 | OPS-001 | 产品 | 运营统计日/周/月，默认 7/30 天 | `workspace-admin-operations` 运营统计 | `GET /v1/admin/ops/dashboard` | 时间粒度切换 | BE 参数测试；FE 联动 | 7.2,7.3,7.4 | 未开始 |
