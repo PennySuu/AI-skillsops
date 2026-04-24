@@ -5,6 +5,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.skillsops.auth.mapper.UserAccountMapper;
+import com.skillsops.review.mapper.ReviewRecordMapper;
+import com.skillsops.skill.mapper.AuditRecordMapper;
+import com.skillsops.skill.mapper.SkillMapper;
+import com.skillsops.skill.mapper.SkillVersionMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,6 +33,18 @@ class OpenApiContractTest {
 
     @MockBean
     private UserAccountMapper userAccountMapper;
+
+    @MockBean
+    private SkillMapper skillMapper;
+
+    @MockBean
+    private SkillVersionMapper skillVersionMapper;
+
+    @MockBean
+    private ReviewRecordMapper reviewRecordMapper;
+
+    @MockBean
+    private AuditRecordMapper auditRecordMapper;
 
     @Test
     void should_exposeExpectedV1Paths_when_openApiGenerated() throws Exception {
