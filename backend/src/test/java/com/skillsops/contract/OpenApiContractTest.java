@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.skillsops.auth.mapper.UserAccountMapper;
+import com.skillsops.category.mapper.CategoryMapper;
 import com.skillsops.rating.mapper.RatingMapper;
 import com.skillsops.review.mapper.ReviewRecordMapper;
 import com.skillsops.skill.mapper.AuditRecordMapper;
@@ -57,6 +58,9 @@ class OpenApiContractTest {
 
     @MockBean
     private RatingMapper ratingMapper;
+
+    @MockBean
+    private CategoryMapper categoryMapper;
 
     @Test
     void should_exposeExpectedV1Paths_when_openApiGenerated() throws Exception {

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.skillsops.category.mapper.CategoryMapper">
+
+    <select id="list" resultType="com.skillsops.category.dto.CategoryItemDTO">
+        SELECT id, name, enabled
+        FROM category
+        ORDER BY id DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <select id="countAll" resultType="long">
+        SELECT COUNT(1)
+        FROM category
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO category (name, enabled)
+        VALUES (#{name}, #{enabled})
+    </insert>
+
+    <update id="updateName">
+        UPDATE category
+        SET name = #{name}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE category
+        SET enabled = #{enabled}
+        WHERE id = #{id}
+    </update>
+
+    <select id="findById" resultType="com.skillsops.category.dto.CategoryItemDTO">
+        SELECT id, name, enabled
+        FROM category
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByName" resultType="com.skillsops.category.dto.CategoryItemDTO">
+        SELECT id, name, enabled
+        FROM category
+        WHERE name = #{name}
+    </select>
+</mapper>
