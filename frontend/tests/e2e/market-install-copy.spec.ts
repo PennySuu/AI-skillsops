@@ -82,6 +82,8 @@ test('market to detail and copy install command', async ({ page }) => {
           id: 501,
           name: 'Skill Install Demo',
           description: 'detail text',
+          avgRating: 4.7,
+          ratingCount: 8,
           versions: [
             { version: '1.0.0', createdAt: '2026-04-20T09:00:00' },
             { version: '1.1.0', createdAt: '2026-04-24T10:00:00' },
@@ -101,6 +103,34 @@ test('market to detail and copy install command', async ({ page }) => {
         message: 'success',
         data: {
           command: 'npx skills add https://skillsops.local/install/demo-token',
+        },
+      }),
+    })
+  })
+
+  await page.route('**/v1/users/me/installs?*', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true,
+        code: 'OK',
+        message: 'success',
+        data: {
+          page: 0,
+          size: 20,
+          total: 1,
+          items: [
+            {
+              skillId: 501,
+              skillName: 'Skill Install Demo',
+              installedAt: '2026-04-24T10:00:00',
+              installedVersion: '1.0.0',
+              latestVersion: '1.1.0',
+              updateAvailable: true,
+              offline: false,
+            },
+          ],
         },
       }),
     })

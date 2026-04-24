@@ -26,6 +26,8 @@ export interface SkillDetailDTO {
   id: number
   name: string
   description: string
+  avgRating: number
+  ratingCount: number
   versions: Array<{
     version: string
     createdAt: string
@@ -44,6 +46,11 @@ export interface UserInstallDTO {
   latestVersion: string
   updateAvailable: boolean
   offline: boolean
+}
+
+export interface UpsertRatingPayload {
+  score: number
+  comment?: string
 }
 
 export type UserRole = 'USER' | 'ADMIN'

@@ -2,14 +2,17 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { NAlert, NButton, NCard, NEmpty, NResult, NSpace, NText, NTimeline, NTimelineItem } from 'naive-ui'
-import { getMarketSkillDetail } from '@/api/modules/market'
+import { getMarketSkillDetail, getMyInstalls } from '@/api/modules/market'
 import SkillInstallPanel from '@/components/market/SkillInstallPanel.vue'
+import RatingEditor from '@/components/market/RatingEditor.vue'
 import type { SkillDetailDTO } from '@/types/api'
 
 const route = useRoute()
 const loading = ref(false)
 const errorMessage = ref('')
 const detail = ref<SkillDetailDTO | null>(null)
+const installed = ref(false)
+const optimisticScore = ref<number | null>(null)
 
 const offline = computed(() => route.query.offline === '1')
 
@@ -23,12 +26,37 @@ async function loadDetail(): Promise<void> {
   errorMessage.value = ''
   try {
     detail.value = await getMarketSkillDetail(skillId)
+    optimisticScore.value = null
+    const installs = await getMyInstalls({ page: 0, size: 100 })
+    installed.value = installs.items.some((item) => item.skillId === skillId)
   } catch (error) {
     errorMessage.value = error instanceof Error ? error.message : '详情加载失败'
   } finally {
     loading.value = false
   }
 }
+
+function handleOptimistic(score: number): void {
+  optimisticScore.value = score
+}
+
+function handleRollback(): void {
+  optimisticScore.value = null
+}
+
+function handleSubmitted(): void {
+  void loadDetail()
+}
+
+const avgRatingText = computed(() => {
+  if (!detail.value) {
+    return '0.0'
+  }
+  if (optimisticScore.value == null) {
+    return detail.value.avgRating.toFixed(1)
+  }
+  return optimisticScore.value.toFixed(1)
+})
 
 onMounted(() => {
   void loadDetail()
@@ -73,9 +101,19 @@ onMounted(() => {
           :size="16"
         >
           <n-text>{{ detail.description || '暂无描述' }}</n-text>
+          <n-text depth="3">
+            综合评分 {{ avgRatingText }}（{{ detail.ratingCount }} 人）
+          </n-text>
           <SkillInstallPanel
             :skill-id="detail.id"
             :offline="offline"
+          />
+          <RatingEditor
+            :skill-id="detail.id"
+            :installed="installed"
+            @optimistic="handleOptimistic"
+            @rollback="handleRollback"
+            @submitted="handleSubmitted"
           />
           <n-text depth="3">
             版本时间线
