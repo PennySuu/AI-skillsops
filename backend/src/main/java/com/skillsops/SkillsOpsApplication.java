@@ -12,7 +12,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         "com.skillsops.skill.mapper",
         "com.skillsops.review.mapper",
         "com.skillsops.rating.mapper",
-        "com.skillsops.category.mapper"
+        "com.skillsops.category.mapper",
+        "com.skillsops.ops.mapper"
 })
 public class SkillsOpsApplication {
 

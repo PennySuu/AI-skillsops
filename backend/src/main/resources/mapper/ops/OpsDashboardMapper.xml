@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.skillsops.ops.mapper.OpsDashboardMapper">
+
+    <select id="countPublishedSkills" resultType="long">
+        SELECT COUNT(1)
+        FROM skill
+        WHERE status = 'published'
+    </select>
+
+    <select id="countInstallsInDays" resultType="long">
+        SELECT COUNT(1)
+        FROM install_record
+        WHERE installed_at &gt;= DATE_SUB(NOW(), INTERVAL #{days} DAY)
+    </select>
+
+    <select id="countRatingsInDays" resultType="long">
+        SELECT COUNT(1)
+        FROM rating
+        WHERE updated_at &gt;= DATE_SUB(NOW(), INTERVAL #{days} DAY)
+    </select>
+
+    <select id="installTrend" resultType="com.skillsops.ops.dto.OpsTrendPointDTO">
+        SELECT
+        <choose>
+            <when test="granularity == 'month'">
+                DATE_FORMAT(installed_at, '%Y-%m') AS bucket
+            </when>
+            <when test="granularity == 'week'">
+                DATE_FORMAT(installed_at, '%x-W%v') AS bucket
+            </when>
+            <otherwise>
+                DATE_FORMAT(installed_at, '%Y-%m-%d') AS bucket
+            </otherwise>
+        </choose>
+        ,
+               COUNT(1) AS installs
+        FROM install_record
+        WHERE installed_at &gt;= DATE_SUB(NOW(), INTERVAL #{days} DAY)
+        GROUP BY bucket
+        ORDER BY bucket ASC
+    </select>
+
+    <select id="topSkills" resultType="com.skillsops.ops.dto.OpsTopSkillDTO">
+        SELECT s.id AS skillId,
+               s.name AS skillName,
+               COUNT(ir.id) AS installCount
+        FROM install_record ir
+                 INNER JOIN skill s ON s.id = ir.skill_id
+        WHERE ir.installed_at &gt;= DATE_SUB(NOW(), INTERVAL #{days} DAY)
+        GROUP BY s.id, s.name
+        ORDER BY installCount DESC, s.id DESC
+        LIMIT 5
+    </select>
+
+    <select id="activeAuthors" resultType="com.skillsops.ops.dto.OpsActiveAuthorDTO">
+        SELECT s.author_id AS authorId,
+               COALESCE(u.username, CONCAT('user-', s.author_id)) AS username,
+               COUNT(1) AS publishedCount
+        FROM skill s
+                 LEFT JOIN user_account u ON u.id = s.author_id
+        WHERE s.status = 'published'
+          AND s.updated_at &gt;= DATE_SUB(NOW(), INTERVAL #{days} DAY)
+        GROUP BY s.author_id, username
+        ORDER BY publishedCount DESC, s.author_id DESC
+        LIMIT 5
+    </select>
+</mapper>

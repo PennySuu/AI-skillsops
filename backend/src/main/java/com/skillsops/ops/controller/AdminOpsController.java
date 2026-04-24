@@ -2,9 +2,9 @@ package com.skillsops.ops.controller;
 
 import com.skillsops.common.api.doc.OpenApiExamples;
 import com.skillsops.common.api.dto.ApiResponse;
-import com.skillsops.common.api.error.ErrorCode;
-import com.skillsops.common.exception.BusinessException;
 import com.skillsops.ops.dto.Granularity;
+import com.skillsops.ops.dto.OpsDashboardDTO;
+import com.skillsops.ops.service.OpsDashboardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -24,16 +24,19 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 public class AdminOpsController {
 
+    private final OpsDashboardService opsDashboardService;
+
+    public AdminOpsController(OpsDashboardService opsDashboardService) {
+        this.opsDashboardService = opsDashboardService;
+    }
+
     @GetMapping("/dashboard")
     @Operation(summary = "运营看板")
     @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "查询成功", content = @Content(schema = @Schema(implementation = ApiResponse.class), examples = @ExampleObject(value = OpenApiExamples.OK_EMPTY)))
-    public ResponseEntity<ApiResponse<Void>> dashboard(
+    public ResponseEntity<ApiResponse<OpsDashboardDTO>> dashboard(
             @RequestParam(defaultValue = "day") Granularity granularity,
-            @RequestParam(defaultValue = "7") @Min(1) @Max(365) int days) {
-        throw todo();
-    }
-
-    private BusinessException todo() {
-        return new BusinessException(ErrorCode.OPERATION_FAILED, "接口壳层已就绪，业务实现将在后续任务补齐");
+            @RequestParam(defaultValue = "7") @Min(1) @Max(365) int days,
+            jakarta.servlet.http.HttpServletRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok(opsDashboardService.dashboard(granularity, days, request)));
     }
 }
