@@ -214,3 +214,5 @@ npm install
 - 文档需说明 API 版本、兼容策略、废弃说明
 - 代码变更前先更新规范，变更后回填 `doc/` 影响范围
 - 前后端类型定义保持同步，契约一致
+- 需求追踪矩阵：`doc/traceability-matrix.md`；勾选 OpenSpec 任务后须与矩阵 **状态** 一致并运行 `node scripts/verify-traceability.mjs`（亦在 CI 中执行）
+- V1 范围边界见 `doc/v1-out-of-scope.md`；发起 PR 时可参考 `.github/PULL_REQUEST_TEMPLATE.md` 自检清单

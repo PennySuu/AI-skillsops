@@ -11,6 +11,8 @@
  * 用法（仓库根目录）：
  *   node scripts/verify-traceability.mjs
  *
+ * 附加门禁（tasks 1.4.2）：矩阵主表「状态」列不得出现「未实现」「未测试」等非法取值（与 ALLOWED_STATUS 一致）。
+ *
  * 退出码：0 通过，1 失败
  */
 

@@ -50,10 +50,10 @@ node scripts/verify-traceability.mjs
 
 ### 1.4 文档一致性矩阵（强制门禁）
 
-- [ ] 1.4.1 建立 `doc/traceability-matrix.md`：将三份评审文档拆为“需求条目 ID -> OpenSpec Requirement -> 后端实现点 -> 前端实现点 -> 测试用例 ID”
-- [ ] 1.4.2 在 CI 中加入一致性检查门禁：矩阵中“未实现/未测试”项不允许合并
-- [ ] 1.4.3 明确“V1 禁止自由扩展”清单：不在三份评审文档中的功能一律标记为 out-of-scope，不得实现
-- [ ] 1.4.4 维护 `scripts/verify-traceability.mjs`：与矩阵列定义保持同步；PR 模板或贡献说明中要求勾选任务后必须通过该脚本
+- [x] 1.4.1 建立 `doc/traceability-matrix.md`：将三份评审文档拆为“需求条目 ID -> OpenSpec Requirement -> 后端实现点 -> 前端实现点 -> 测试用例 ID”
+- [x] 1.4.2 在 CI 中加入一致性检查门禁：矩阵中“未实现/未测试”项不允许合并
+- [x] 1.4.3 明确“V1 禁止自由扩展”清单：不在三份评审文档中的功能一律标记为 out-of-scope，不得实现
+- [x] 1.4.4 维护 `scripts/verify-traceability.mjs`：与矩阵列定义保持同步；PR 模板或贡献说明中要求勾选任务后必须通过该脚本
 
 ---
 
