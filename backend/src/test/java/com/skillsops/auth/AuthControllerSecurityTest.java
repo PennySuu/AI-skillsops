@@ -10,6 +10,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.skillsops.auth.mapper.UserAccountMapper;
 import com.skillsops.auth.dto.AuthProfileResponse;
 import com.skillsops.auth.service.AuthService;
+import com.skillsops.category.mapper.CategoryMapper;
+import com.skillsops.ops.mapper.OpsDashboardMapper;
+import com.skillsops.rating.mapper.RatingMapper;
+import com.skillsops.review.mapper.ReviewRecordMapper;
+import com.skillsops.skill.mapper.AuditRecordMapper;
+import com.skillsops.skill.mapper.InstallRecordMapper;
+import com.skillsops.skill.mapper.SkillMapper;
+import com.skillsops.skill.mapper.SkillVersionMapper;
+import com.skillsops.skill.service.InstallCommandService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +45,33 @@ class AuthControllerSecurityTest {
 
     @MockBean
     private UserAccountMapper userAccountMapper;
+
+    @MockBean
+    private CategoryMapper categoryMapper;
+
+    @MockBean
+    private OpsDashboardMapper opsDashboardMapper;
+
+    @MockBean
+    private RatingMapper ratingMapper;
+
+    @MockBean
+    private SkillMapper skillMapper;
+
+    @MockBean
+    private SkillVersionMapper skillVersionMapper;
+
+    @MockBean
+    private ReviewRecordMapper reviewRecordMapper;
+
+    @MockBean
+    private AuditRecordMapper auditRecordMapper;
+
+    @MockBean
+    private InstallRecordMapper installRecordMapper;
+
+    @MockBean
+    private InstallCommandService installCommandService;
 
     @Test
     void should_rejectWriteRequest_when_csrfMissing() throws Exception {

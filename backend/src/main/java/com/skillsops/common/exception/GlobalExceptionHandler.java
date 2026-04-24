@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
@@ -38,6 +39,12 @@ public class GlobalExceptionHandler {
                 : ex.getConstraintViolations().iterator().next().getMessage();
         return ResponseEntity.status(ErrorCode.VALIDATION_FAILED.getHttpStatus())
                 .body(ApiResponse.fail(ErrorCode.VALIDATION_FAILED, msg));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiResponse<Void>> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        return ResponseEntity.status(ErrorCode.VALIDATION_FAILED.getHttpStatus())
+                .body(ApiResponse.fail(ErrorCode.VALIDATION_FAILED, "请求参数格式不正确"));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
