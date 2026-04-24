@@ -2,6 +2,7 @@ package com.skillsops.review.service;
 
 import com.skillsops.common.api.error.ErrorCode;
 import com.skillsops.common.exception.BusinessException;
+import com.skillsops.market.service.MarketCacheService;
 import com.skillsops.review.domain.ReviewRecord;
 import com.skillsops.review.dto.PendingReviewItem;
 import com.skillsops.review.mapper.ReviewRecordMapper;
@@ -23,16 +24,19 @@ public class ReviewService {
     private final SkillMapper skillMapper;
     private final AuditRecordMapper auditRecordMapper;
     private final CurrentUserService currentUserService;
+    private final MarketCacheService marketCacheService;
 
     public ReviewService(
             ReviewRecordMapper reviewRecordMapper,
             SkillMapper skillMapper,
             AuditRecordMapper auditRecordMapper,
-            CurrentUserService currentUserService) {
+            CurrentUserService currentUserService,
+            MarketCacheService marketCacheService) {
         this.reviewRecordMapper = reviewRecordMapper;
         this.skillMapper = skillMapper;
         this.auditRecordMapper = auditRecordMapper;
         this.currentUserService = currentUserService;
+        this.marketCacheService = marketCacheService;
     }
 
     public List<PendingReviewItem> listPending(HttpServletRequest request) {
@@ -48,6 +52,8 @@ public class ReviewService {
         skillMapper.updateStatus(review.skillId(), SkillStatus.published.name());
         reviewRecordMapper.updateStatus(reviewId, "approved", null, reviewerId);
         auditRecordMapper.insert(review.skillId(), "review.approve", reviewerId, "ADMIN", "审核通过");
+        marketCacheService.evictListCache();
+        marketCacheService.evictSkillDetail(review.skillId());
     }
 
     @Transactional
@@ -58,6 +64,8 @@ public class ReviewService {
         skillMapper.updateStatus(review.skillId(), SkillStatus.draft.name());
         reviewRecordMapper.updateStatus(reviewId, "rejected", reason, reviewerId);
         auditRecordMapper.insert(review.skillId(), "review.reject", reviewerId, "ADMIN", reason);
+        marketCacheService.evictListCache();
+        marketCacheService.evictSkillDetail(review.skillId());
     }
 
     @Transactional
@@ -70,6 +78,8 @@ public class ReviewService {
         }
         skillMapper.updateStatus(skillId, SkillStatus.offline.name());
         auditRecordMapper.insert(skillId, "skill.offline", reviewerId, "ADMIN", reason);
+        marketCacheService.evictListCache();
+        marketCacheService.evictSkillDetail(skillId);
     }
 
     private ReviewRecord requirePendingReview(Long reviewId) {

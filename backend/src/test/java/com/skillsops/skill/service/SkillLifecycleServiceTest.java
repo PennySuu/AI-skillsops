@@ -2,6 +2,7 @@ package com.skillsops.skill.service;
 
 import com.skillsops.common.api.error.ErrorCode;
 import com.skillsops.common.exception.BusinessException;
+import com.skillsops.market.service.MarketCacheService;
 import com.skillsops.skill.domain.Skill;
 import com.skillsops.skill.domain.SkillStatus;
 import com.skillsops.skill.dto.UpdateSkillRequest;
@@ -43,6 +44,9 @@ class SkillLifecycleServiceTest {
 
     @Mock
     private CurrentUserService currentUserService;
+
+    @Mock
+    private MarketCacheService marketCacheService;
 
     @Mock
     private HttpServletRequest request;

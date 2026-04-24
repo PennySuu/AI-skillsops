@@ -20,10 +20,15 @@ public class MarketQueryService {
 
     private final SkillMapper skillMapper;
     private final SkillVersionMapper skillVersionMapper;
+    private final MarketCacheService marketCacheService;
 
-    public MarketQueryService(SkillMapper skillMapper, SkillVersionMapper skillVersionMapper) {
+    public MarketQueryService(
+            SkillMapper skillMapper,
+            SkillVersionMapper skillVersionMapper,
+            MarketCacheService marketCacheService) {
         this.skillMapper = skillMapper;
         this.skillVersionMapper = skillVersionMapper;
+        this.marketCacheService = marketCacheService;
     }
 
     public PageResponse<MarketSkillSummaryDTO> listPublished(
@@ -35,6 +40,11 @@ public class MarketQueryService {
         int offset = page * size;
         Long categoryId = parseCategory(category);
         SortParam sortParam = parseSort(sort);
+        String cacheKey = buildListCacheKey(page, size, q, categoryId, sortParam);
+        var cached = marketCacheService.getPublishedList(cacheKey);
+        if (cached.isPresent()) {
+            return cached.get();
+        }
         List<MarketSkillSummaryDTO> items = skillMapper.listPublished(
                 offset,
                 size,
@@ -43,10 +53,16 @@ public class MarketQueryService {
                 sortParam.field(),
                 sortParam.direction());
         long total = skillMapper.countPublished(q, categoryId);
-        return new PageResponse<>(page, size, total, items);
+        PageResponse<MarketSkillSummaryDTO> result = new PageResponse<>(page, size, total, items);
+        marketCacheService.cachePublishedList(cacheKey, result);
+        return result;
     }
 
     public MarketSkillDetailDTO getPublishedSkillDetail(Long skillId) {
+        var cached = marketCacheService.getPublishedDetail(skillId);
+        if (cached.isPresent()) {
+            return cached.get();
+        }
         Skill skill = skillMapper.findPublishedById(skillId);
         if (skill == null) {
             throw new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, "Skill 不存在或未上架");
@@ -54,7 +70,9 @@ public class MarketQueryService {
         List<SkillVersionDTO> versions = skillVersionMapper.listBySkillId(skillId).stream()
                 .map(this::mapVersion)
                 .toList();
-        return new MarketSkillDetailDTO(skill.id(), skill.name(), skill.description(), versions);
+        MarketSkillDetailDTO result = new MarketSkillDetailDTO(skill.id(), skill.name(), skill.description(), versions);
+        marketCacheService.cachePublishedDetail(skillId, result);
+        return result;
     }
 
     private SkillVersionDTO mapVersion(SkillVersion value) {
@@ -88,6 +106,15 @@ public class MarketQueryService {
             throw new BusinessException(ErrorCode.VALIDATION_FAILED, "sort 参数不支持");
         }
         return new SortParam(field, direction);
+    }
+
+    private String buildListCacheKey(int page, int size, String q, Long categoryId, SortParam sortParam) {
+        return "p=" + page
+                + ":s=" + size
+                + ":q=" + (q == null ? "" : q)
+                + ":c=" + (categoryId == null ? "" : categoryId)
+                + ":sf=" + sortParam.field()
+                + ":sd=" + sortParam.direction();
     }
 
     private record SortParam(String field, String direction) {

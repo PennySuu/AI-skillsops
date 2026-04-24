@@ -29,6 +29,9 @@ class MarketQueryServiceTest {
     @Mock
     private SkillVersionMapper skillVersionMapper;
 
+    @Mock
+    private MarketCacheService marketCacheService;
+
     @InjectMocks
     private MarketQueryService marketQueryService;
 
@@ -37,12 +40,15 @@ class MarketQueryServiceTest {
         when(skillMapper.listPublished(anyInt(), anyInt(), eq("abc"), eq(10L), eq("name"), eq("asc")))
                 .thenReturn(List.of(new MarketSkillSummaryDTO(1L, "A", "D", 0.0, 0)));
         when(skillMapper.countPublished(eq("abc"), eq(10L))).thenReturn(1L);
+        when(marketCacheService.getPublishedList("p=0:s=10:q=abc:c=10:sf=name:sd=asc"))
+                .thenReturn(java.util.Optional.empty());
 
         var page = marketQueryService.listPublished(0, 10, "10", "abc", "name,asc");
 
         assertEquals(1, page.items().size());
         verify(skillMapper).listPublished(0, 10, "abc", 10L, "name", "asc");
         verify(skillMapper).countPublished("abc", 10L);
+        verify(marketCacheService).cachePublishedList("p=0:s=10:q=abc:c=10:sf=name:sd=asc", page);
     }
 
     @Test

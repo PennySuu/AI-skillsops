@@ -2,6 +2,7 @@ package com.skillsops.skill.service;
 
 import com.skillsops.common.api.error.ErrorCode;
 import com.skillsops.common.exception.BusinessException;
+import com.skillsops.market.service.MarketCacheService;
 import com.skillsops.skill.domain.Skill;
 import com.skillsops.skill.domain.SkillStatus;
 import com.skillsops.skill.dto.CreateSkillRequest;
@@ -23,18 +24,21 @@ public class SkillLifecycleService {
     private final ReviewRecordMapper reviewRecordMapper;
     private final AuditRecordMapper auditRecordMapper;
     private final CurrentUserService currentUserService;
+    private final MarketCacheService marketCacheService;
 
     public SkillLifecycleService(
             SkillMapper skillMapper,
             SkillVersionMapper skillVersionMapper,
             ReviewRecordMapper reviewRecordMapper,
             AuditRecordMapper auditRecordMapper,
-            CurrentUserService currentUserService) {
+            CurrentUserService currentUserService,
+            MarketCacheService marketCacheService) {
         this.skillMapper = skillMapper;
         this.skillVersionMapper = skillVersionMapper;
         this.reviewRecordMapper = reviewRecordMapper;
         this.auditRecordMapper = auditRecordMapper;
         this.currentUserService = currentUserService;
+        this.marketCacheService = marketCacheService;
     }
 
     @Transactional
@@ -63,6 +67,8 @@ public class SkillLifecycleService {
 
         skillMapper.updateDraft(skillId, request.name(), request.description(), request.resourceUrl());
         auditRecordMapper.insert(skillId, "skill.update", actorId, actorRole, "编辑 skill 内容");
+        marketCacheService.evictListCache();
+        marketCacheService.evictSkillDetail(skillId);
     }
 
     @Transactional
@@ -76,6 +82,8 @@ public class SkillLifecycleService {
         skillMapper.updateStatus(skillId, SkillStatus.pending.name());
         reviewRecordMapper.insertPending(skillId, actorId);
         auditRecordMapper.insert(skillId, "skill.submit_review", actorId, actorRole, "提交审核");
+        marketCacheService.evictListCache();
+        marketCacheService.evictSkillDetail(skillId);
     }
 
     @Transactional
@@ -89,6 +97,8 @@ public class SkillLifecycleService {
             throw new BusinessException(ErrorCode.SKILL_VERSION_CONFLICT, "版本号冲突");
         }
         auditRecordMapper.insert(skillId, "skill.create_version", actorId, actorRole, "发布新版本 " + version);
+        marketCacheService.evictListCache();
+        marketCacheService.evictSkillDetail(skillId);
     }
 
     private Skill requireSkill(Long skillId) {
