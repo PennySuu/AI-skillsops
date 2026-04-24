@@ -55,17 +55,17 @@
 | LIFE-008 | 产品/后端 | 发布新版本，版本号唯一 | `skill-lifecycle-review` 版本管理 | `POST /v1/skills/{skillId}/versions` + 409 | 发布版本弹窗 | BE 冲突测试；FE 错误提示 | 4.2,4.4,4.6 | 已完成 |
 | LIFE-009 | 后端 | 已上架 Skill 新版本默认无需复审 | `skill-lifecycle-review` 免复审策略 | 版本发布直接生效 | 前端可更新标记 | 集成测试流程 | 4.2,4.6,5.3 | 已完成 |
 | LIFE-010 | 产品 | 管理员下架需原因+二次确认 | `skill-lifecycle-review` 下架 | 下架接口记录 reason | 下架确认弹窗 | BE reason 校验；FE 弹窗 | 4.3,4.5,4.6 | 已完成 |
-| WS-001 | 产品/前端 | 工作台信息架构（发布/安装/审核/分类/统计） | `workspace-admin-operations` 路由结构 | 权限接口支持 | 菜单与侧边栏 | FE 路由快照测试 | 4.5,7.3 | 进行中 |
+| WS-001 | 产品/前端 | 工作台信息架构（发布/安装/审核/分类/统计） | `workspace-admin-operations` 路由结构 | 权限接口支持 | 菜单与侧边栏 | FE 路由快照测试 | 4.5,7.3 | 已完成 |
 | WS-002 | 前端 | `/market` 默认首页 | `workspace-admin-operations` 默认首页 | 登录后会话可用 | 登录成功跳转 `/market` | E2E 登录跳转 | 3.3,3.6 | 已完成 |
 | WS-003 | 前端 | `/workspace/reviews` 管理员路由 | `workspace-admin-operations` 路由守卫 | 403 权限返回 | `meta.roles` 守卫 | FE 守卫单测 | 3.4,4.5 | 已完成 |
-| WS-004 | 前端 | 菜单与路由同源（menu.config.ts） | `workspace-admin-operations` 菜单一致性 | 无 | 统一菜单配置 | FE 配置一致性测试 | 2.2,3.4,7.3 | 进行中 |
+| WS-004 | 前端 | 菜单与路由同源（menu.config.ts） | `workspace-admin-operations` 菜单一致性 | 无 | 统一菜单配置 | FE 配置一致性测试 | 2.2,3.4,7.3 | 已完成 |
 | WS-005 | 产品 | 我的发布页（状态/编辑/提交/发布） | `workspace-admin-operations` 我的发布 | 相关 API 支撑 | `/workspace/published` 页面 | FE 页面流测试 | 4.4,4.6 | 已完成 |
 | WS-006 | 产品 | 我的安装页（版本、可更新、下架标） | `workspace-admin-operations` 我的安装 | `GET /v1/users/me/installs` | `/workspace/installed` 页面 | FE 渲染测试 | 5.3,5.5,5.6 | 已完成 |
 | CAT-001 | 产品/后端 | 分类管理 CRUD + 启停 | `workspace-admin-operations` 分类管理 | `/v1/admin/categories*` | `/workspace/categories` | BE CRUD 集成；FE 表单 | 7.1,7.3,7.4 | 进行中 |
 | CAT-002 | 产品 | 分类名唯一 | `workspace-admin-operations` 分类唯一性 | DB 唯一约束 + 409/422 | 重复名提示 | BE 重复名测试；FE 提示 | 7.1,7.3,7.4 | 进行中 |
 | OPS-001 | 产品 | 运营统计日/周/月，默认 7/30 天 | `workspace-admin-operations` 运营统计 | `GET /v1/admin/ops/dashboard` | 时间粒度切换 | BE 参数测试；FE 联动 | 7.2,7.3,7.4 | 进行中 |
 | OPS-002 | 产品/前端 | 指标卡 + 趋势 + TopN + 活跃作者 | `workspace-admin-operations` 运营看板 | 聚合查询/DTO | ECharts 页面 | FE 图表适配测试 | 7.2,7.3,7.4 | 进行中 |
-| OPS-003 | 产品/前端 | 局部错误不影响其他模块 | `workspace-admin-operations` 降级 | 局部接口错误可返回 | 组件局部错误态 | FE 局部降级测试 | 7.3,7.4 | 未开始 |
+| OPS-003 | 产品/前端 | 局部错误不影响其他模块 | `workspace-admin-operations` 降级 | 局部接口错误可返回 | 组件局部错误态 | FE 局部降级测试 | 7.3,7.4 | 进行中 |
 | API-001 | 后端/config | RESTful + `/v1` + 统一响应 | `auth-session-security` + 其他 specs | OpenAPI + Controller | `api/client` 封装 | 契约测试 | 2.1,2.2,2.3 | 已完成 |
 | API-002 | 后端/config | 请求头：`X-Request-ID`、`Idempotency-Key`、CSRF | `auth-session-security` | 统一拦截器/过滤器 | axios 请求拦截器 | 头注入与校验测试 | 2.2,3.1,5.2 | 已完成 |
 | API-003 | 后端 | 异常码映射（401/403/409/422/429） | `auth-session-security` + 其他 specs | 错误码枚举与抛出 | 错误消息映射 | BE 异常映射测试 | 1.1.3,2.1,3.5 | 已完成 |
@@ -76,7 +76,7 @@
 | NFR-001 | 前端/后端评审 | CI 门禁（lint/typecheck/test/build, mvn verify） | `tasks` CI 要求 | Maven verify | FE pipeline | CI 结果 | 1.3.4 | 已完成 |
 | NFR-002 | 后端评审 | 可观测性（Actuator/Prometheus/日志） | `design` D7 + `tasks` | Micrometer + JSON 日志 | 前端错误上报对接 | 监控冒烟 | 8.1,8.2 | 未开始 |
 | NFR-003 | 前端评审 | 错误监控与 Web Vitals | `tasks` 非功能 | 无 | Sentry + 指标采集 | FE 冒烟 | 8.2 | 未开始 |
-| NFR-004 | 产品/前端评审 | 错误态/空态/重试一致交互 | `market-install-rating` + `workspace-admin-operations` | 错误码语义 | BaseErrorBlock/BaseEmpty | FE 组件与 E2E | 5.4,7.3 | 进行中 |
+| NFR-004 | 产品/前端评审 | 错误态/空态/重试一致交互 | `market-install-rating` + `workspace-admin-operations` | 错误码语义 | BaseErrorBlock/BaseEmpty | FE 组件与 E2E | 5.4,7.3 | 已完成 |
 
 ## 3. 覆盖率检查（手动）
 

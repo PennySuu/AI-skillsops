@@ -110,7 +110,7 @@ node scripts/verify-traceability.mjs
 
 - [x] 7.1 **后端**：Flyway `category`；`GET/POST/PUT/PATCH /v1/admin/categories...`；名称唯一；启停
 - [x] 7.2 **后端**：`GET /v1/admin/ops/dashboard`：granularity **day/week/month**，默认近 **7/30** 天；指标 + 趋势 + TopN + 活跃作者（SQL 或预聚合，按 `design.md`）
-- [ ] 7.3 **前端**：`/workspace/categories` CRUD + 启停确认；`/workspace/ops` ECharts 图表与 **局部错误降级**
+- [x] 7.3 **前端**：`/workspace/categories` CRUD + 启停确认；`/workspace/ops` ECharts 图表与 **局部错误降级**
 - [ ] 7.4 **测试**：后端集成测试覆盖 **dashboard 参数校验与空数据**；前端 Vitest 测图表数据适配器；E2E 管理员进入运营页（seed 数据）
 
 ---
