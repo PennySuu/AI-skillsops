@@ -90,7 +90,7 @@ node scripts/verify-traceability.mjs
 ## 5. 市场、详情、安装命令与我的安装（后端 / 前端 / 测试）
 
 - [x] 5.1 **后端**：`GET /v1/market/skills`（仅 `published`）、分页排序过滤；`GET /v1/market/skills/{id}` 详情聚合；Redis 缓存与失效策略（与 `design.md` 一致）
-- [ ] 5.2 **后端**：`POST /v1/skills/{id}/install-command`：**短 TTL 签名 URL**、单次消费、`Idempotency-Key`、**offline** 拒绝 `409`；`install_record` Flyway + upsert
+- [x] 5.2 **后端**：`POST /v1/skills/{id}/install-command`：**短 TTL 签名 URL**、单次消费、`Idempotency-Key`、**offline** 拒绝 `409`；`install_record` Flyway + upsert
 - [x] 5.3 **后端**：`GET /v1/users/me/installs`；可更新与下架标记计算
 - [ ] 5.4 **前端**：`/market` 筛选条、`SkillCard`、分页、骨架屏、空态/错误重试；`/skills/:id` 详情布局、版本时间线、下架 Banner
 - [ ] 5.5 **前端**：安装面板：生成 UUID **Idempotency-Key** → 调接口 → 写剪贴板 → Toast（提示勿分享，语义与短时签名一致）；`/workspace/installed` 列表与复制最新命令
