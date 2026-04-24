@@ -29,9 +29,9 @@
 | AUTH-001 | 产品 | 账号+密码注册，无邮箱验证码 | `auth-session-security` 注册 | `POST /v1/auth/register` | `/register` 表单 | BE: 注册成功/冲突；FE: 校验；E2E | 3.1,3.3,3.5,3.6 | 进行中 |
 | AUTH-002 | 产品/后端 | 登录并写 Cookie 会话 | `auth-session-security` 登录会话 | `POST /v1/auth/login` + HttpOnly Cookie | 登录页 + `authStore` | BE: Cookie 写入；FE: 登录态 | 3.1,3.3,3.4,3.5 | 进行中 |
 | AUTH-003 | 产品/后端 | 退出（登出）能力 | `auth-session-security` 退出 | `POST /v1/auth/logout` | 顶部菜单退出 | BE: 登出后 401；E2E 登出链路 | 3.1,3.3,3.5 | 进行中 |
-| AUTH-004 | 产品/前端 | Token 过期回登录并保留 returnUrl | `auth-session-security` 会话过期 | 401 `AUTH_TOKEN_EXPIRED` | 路由守卫 + 回跳 | FE 守卫单测；E2E 回跳 | 3.3,3.4,3.6 | 未开始 |
+| AUTH-004 | 产品/前端 | Token 过期回登录并保留 returnUrl | `auth-session-security` 会话过期 | 401 `AUTH_TOKEN_EXPIRED` | 路由守卫 + 回跳 | FE 守卫单测；E2E 回跳 | 3.3,3.4,3.6 | 进行中 |
 | AUTH-005 | 后端 | CSRF 为上线硬门禁 | `auth-session-security` CSRF | 写接口 CSRF 校验 | axios 注入 CSRF | BE: 缺失403；E2E 缺头拒绝 | 3.1,3.5 | 进行中 |
-| AUTH-006 | 产品 | 角色 USER/ADMIN，作者按归属判定 | `auth-session-security` RBAC | 403 权限拦截 | 菜单裁剪 + 403 页 | FE 非管理员拦截；BE 权限测试 | 3.4,4.5,4.6 | 未开始 |
+| AUTH-006 | 产品 | 角色 USER/ADMIN，作者按归属判定 | `auth-session-security` RBAC | 403 权限拦截 | 菜单裁剪 + 403 页 | FE 非管理员拦截；BE 权限测试 | 3.4,4.5,4.6 | 进行中 |
 | AUTH-007 | 后端/config | 统一响应 envelope + 错误码映射 | `auth-session-security` 响应规范 | `ApiResponse` + `ControllerAdvice` | 统一错误处理器 | BE 响应契约测试 | 1.1.3,2.1,2.3 | 已完成 |
 | AUTH-008 | 后端 | `X-Request-ID` / `Idempotency-Key` | `auth-session-security` 可观测性与幂等 | 请求头接入与校验 | axios 拦截器注入 | FE 请求头单测；BE 幂等冲突 | 2.2,5.2,8.1 | 进行中 |
 | MKT-001 | 产品 | 市场仅展示已上架 Skill | `market-install-rating` 市场可见性 | `GET /v1/market/skills` 过滤 published | 市场列表展示 | BE 列表过滤；E2E 可见性 | 5.1,5.4,5.6 | 未开始 |
@@ -56,8 +56,8 @@
 | LIFE-009 | 后端 | 已上架 Skill 新版本默认无需复审 | `skill-lifecycle-review` 免复审策略 | 版本发布直接生效 | 前端可更新标记 | 集成测试流程 | 4.2,4.6,5.3 | 未开始 |
 | LIFE-010 | 产品 | 管理员下架需原因+二次确认 | `skill-lifecycle-review` 下架 | 下架接口记录 reason | 下架确认弹窗 | BE reason 校验；FE 弹窗 | 4.3,4.5,4.6 | 未开始 |
 | WS-001 | 产品/前端 | 工作台信息架构（发布/安装/审核/分类/统计） | `workspace-admin-operations` 路由结构 | 权限接口支持 | 菜单与侧边栏 | FE 路由快照测试 | 4.5,7.3 | 未开始 |
-| WS-002 | 前端 | `/market` 默认首页 | `workspace-admin-operations` 默认首页 | 登录后会话可用 | 登录成功跳转 `/market` | E2E 登录跳转 | 3.3,3.6 | 未开始 |
-| WS-003 | 前端 | `/workspace/reviews` 管理员路由 | `workspace-admin-operations` 路由守卫 | 403 权限返回 | `meta.roles` 守卫 | FE 守卫单测 | 3.4,4.5 | 未开始 |
+| WS-002 | 前端 | `/market` 默认首页 | `workspace-admin-operations` 默认首页 | 登录后会话可用 | 登录成功跳转 `/market` | E2E 登录跳转 | 3.3,3.6 | 进行中 |
+| WS-003 | 前端 | `/workspace/reviews` 管理员路由 | `workspace-admin-operations` 路由守卫 | 403 权限返回 | `meta.roles` 守卫 | FE 守卫单测 | 3.4,4.5 | 进行中 |
 | WS-004 | 前端 | 菜单与路由同源（menu.config.ts） | `workspace-admin-operations` 菜单一致性 | 无 | 统一菜单配置 | FE 配置一致性测试 | 2.2,3.4,7.3 | 进行中 |
 | WS-005 | 产品 | 我的发布页（状态/编辑/提交/发布） | `workspace-admin-operations` 我的发布 | 相关 API 支撑 | `/workspace/published` 页面 | FE 页面流测试 | 4.4,4.6 | 未开始 |
 | WS-006 | 产品 | 我的安装页（版本、可更新、下架标） | `workspace-admin-operations` 我的安装 | `GET /v1/users/me/installs` | `/workspace/installed` 页面 | FE 渲染测试 | 5.3,5.5,5.6 | 未开始 |

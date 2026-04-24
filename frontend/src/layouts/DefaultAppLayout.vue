@@ -1,5 +1,28 @@
 <script setup lang="ts">
-import { NConfigProvider, NLayout, NLayoutContent, NLayoutHeader, dateZhCN, zhCN } from 'naive-ui'
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import {
+  NButton,
+  NConfigProvider,
+  NLayout,
+  NLayoutContent,
+  NLayoutHeader,
+  NSpace,
+  NText,
+  dateZhCN,
+  zhCN,
+} from 'naive-ui'
+import { useAuthStore } from '@/stores/authStore'
+
+const router = useRouter()
+const authStore = useAuthStore()
+
+const userLabel = computed(() => authStore.profile?.username ?? '未登录')
+
+async function handleLogout(): Promise<void> {
+  await authStore.logout()
+  await router.push('/login')
+}
 </script>
 
 <template>
@@ -13,7 +36,23 @@ import { NConfigProvider, NLayout, NLayoutContent, NLayoutHeader, dateZhCN, zhCN
         :class="$style.shellHeader"
         style="height: 56px; padding: 0 24px; display: flex; align-items: center"
       >
-        <strong style="color: var(--skillsops-color-primary)">SkillsOps</strong>
+        <div :class="$style.headerInner">
+          <strong style="color: var(--skillsops-color-primary)">SkillsOps</strong>
+          <n-space align="center">
+            <n-text depth="3">
+              {{ userLabel }}
+            </n-text>
+            <n-button
+              v-if="authStore.isAuthenticated"
+              tertiary
+              type="primary"
+              size="small"
+              @click="handleLogout"
+            >
+              退出登录
+            </n-button>
+          </n-space>
+        </div>
       </n-layout-header>
       <n-layout-content
         content-style="padding: 24px; max-width: 1200px; margin: 0 auto; width: 100%"
@@ -27,5 +66,12 @@ import { NConfigProvider, NLayout, NLayoutContent, NLayoutHeader, dateZhCN, zhCN
 <style module lang="scss">
 .shellHeader {
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.headerInner {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 </style>

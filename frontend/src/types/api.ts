@@ -38,3 +38,12 @@ export interface UserInstallDTO {
   installedAt: string
   latestVersion: string
 }
+
+export type UserRole = 'USER' | 'ADMIN'
+
+export interface AuthProfileDTO {
+  userId: number
+  username: string
+  role: UserRole
+  expiresInSeconds: number
+}

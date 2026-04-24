@@ -14,6 +14,12 @@ const request = axios.create({
 
 request.interceptors.request.use((config) => {
   config.headers.set('X-Request-ID', crypto.randomUUID())
+  if ((config.method ?? 'get').toLowerCase() !== 'get') {
+    const csrfToken = readCookie('XSRF-TOKEN')
+    if (csrfToken) {
+      config.headers.set('X-CSRF-Token', csrfToken)
+    }
+  }
   return config
 })
 
@@ -37,6 +43,15 @@ export async function unwrapApiResponse<T>(response: AxiosResponse<ApiResponse<T
     throw new Error(response.data.message || response.data.code)
   }
   return response.data.data
+}
+
+function readCookie(name: string): string | null {
+  const prefix = `${name}=`
+  const found = document.cookie
+    .split(';')
+    .map((v) => v.trim())
+    .find((v) => v.startsWith(prefix))
+  return found ? decodeURIComponent(found.slice(prefix.length)) : null
 }
 
 export { request, timeoutMs }
