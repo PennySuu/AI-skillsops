@@ -8,6 +8,7 @@ import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/compon
 import { use } from 'echarts/core'
 import { getOpsDashboard } from '@/api/modules/ops'
 import type { OpsDashboardDTO, OpsGranularity } from '@/types/api'
+import { buildInstallTrendChartOption, buildTopSkillsBarChartOption } from '@/utils/opsChartAdapters'
 
 use([CanvasRenderer, LineChart, BarChart, GridComponent, TooltipComponent, LegendComponent])
 
@@ -35,25 +36,13 @@ async function loadDashboard(): Promise<void> {
   }
 }
 
-const trendOption = computed(() => {
-  const points = dashboard.value?.installTrend ?? []
-  return {
-    tooltip: { trigger: 'axis' },
-    xAxis: { type: 'category', data: points.map((item) => item.bucket) },
-    yAxis: { type: 'value' },
-    series: [{ type: 'line', data: points.map((item) => item.installs), smooth: true, name: '安装量' }],
-  }
-})
+const trendOption = computed(() =>
+  buildInstallTrendChartOption(dashboard.value?.installTrend ?? []),
+)
 
-const topSkillOption = computed(() => {
-  const rows = dashboard.value?.topSkills ?? []
-  return {
-    tooltip: { trigger: 'axis' },
-    xAxis: { type: 'category', data: rows.map((item) => item.skillName) },
-    yAxis: { type: 'value' },
-    series: [{ type: 'bar', data: rows.map((item) => item.installCount), name: '安装次数' }],
-  }
-})
+const topSkillOption = computed(() =>
+  buildTopSkillsBarChartOption(dashboard.value?.topSkills ?? []),
+)
 
 onMounted(() => {
   void loadDashboard()
