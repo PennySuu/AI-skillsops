@@ -14,12 +14,38 @@
 
 ### 后端
 
-- Java 17
+- Java 17（运行时 **JDK 17+**，本地常用 19 亦可）
 - Spring Boot 3.3.x
 - MyBatis
 - Maven
 - MySQL 8.0+
 - Redis 7.0+
+
+**运行与配置（`backend/`）**
+
+1. 准备 **MySQL**、**Redis**（`dev` profile 默认连本机 `127.0.0.1`）。
+2. 设置 **`JAVA_HOME`** 指向 JDK 根目录（见下文「§11」），在仓库根目录执行：
+
+```powershell
+$env:SPRING_PROFILES_ACTIVE = "dev"
+cd backend
+mvn -B spring-boot:run
+```
+
+3. **Flyway**：应用启动时自动执行 `src/main/resources/db/migration`。**生产**仅做 `migrate`，已通过 `clean-disabled` 禁止 `clean`；是否执行迁移可用环境变量 `SKILLSOPS_FLYWAY_ENABLED`（默认 `true`）配合发布流水线窗口控制。
+
+**常用环境变量（dev 可有默认值，prod 必填项勿留空）**
+
+| 变量 | 含义 |
+|------|------|
+| `SPRING_PROFILES_ACTIVE` | `dev` / `prod` 等 |
+| `SKILLSOPS_DB_URL` | JDBC URL（dev 默认本机 `skillsops` 库，可带 `createDatabaseIfNotExist`） |
+| `SKILLSOPS_DB_USERNAME` / `SKILLSOPS_DB_PASSWORD` | 数据库账号 |
+| `SKILLSOPS_REDIS_HOST` / `SKILLSOPS_REDIS_PORT` / `SKILLSOPS_REDIS_PASSWORD` | Redis |
+| `SKILLSOPS_FLYWAY_ENABLED` | 生产是否执行 Flyway（默认 `true`） |
+
+- OpenAPI：`/swagger-ui.html`（开发常用）
+- 健康检查：`/actuator/health`
 
 ### 前端
 
@@ -44,7 +70,7 @@ skillsops/
 └─ openspec/         # SDD 规范与变更定义
 ```
 
-> 当前仓库以规范文档为主，若尚未初始化 `backend/`、`frontend/`，请先按本 README 建立目录与工程骨架。
+> `frontend/` 尚未初始化时，请按下文「§12」创建 Vite 工程；后端工程已在 `backend/`。
 
 ## 4. 开发流程（推荐）
 
@@ -137,7 +163,19 @@ skillsops/
 - 集成测试覆盖 API、数据库、缓存
 - E2E 覆盖关键用户流程（Playwright/Cypress）
 
-## 11. 初始化建议（工程尚未创建时）
+## 11. 后端构建环境（JDK 与 JAVA_HOME）
+
+- **版本**：`openspec/config.yaml` 与后端工程要求 **Java 17+**；使用 **Java 19** 等更高版本可以正常编译运行 Spring Boot 3.3.x。
+- **`JAVA_HOME`（Windows 必看）**：`mvn` 依赖 **`JAVA_HOME` 指向 JDK 安装根目录**（例如 `C:\Program Files (x86)\Java\jdk-19`），且 `%JAVA_HOME%\bin\java.exe` 与你在终端里期望的版本一致。若只把新 JDK 加进 `PATH`，但 **`JAVA_HOME` 仍指向旧 JRE/JDK**，会出现 Maven 报错「JAVA_HOME is not defined correctly」或编译时类文件版本不匹配。
+- **PowerShell 临时设置示例**（按本机路径修改）：
+
+```powershell
+$env:JAVA_HOME = "C:\Program Files (x86)\Java\jdk-19"
+$env:Path = "$env:JAVA_HOME\bin;$env:Path"
+mvn -version
+```
+
+## 12. 初始化建议（工程尚未创建时）
 
 ```powershell
 # 1) 创建目录
@@ -152,7 +190,7 @@ npm create vite@latest . -- --template vue-ts
 npm install
 ```
 
-## 12. 文档与协作约定
+## 13. 文档与协作约定
 
 - 规范更新必须同步文档与变更记录
 - 文档需说明 API 版本、兼容策略、废弃说明

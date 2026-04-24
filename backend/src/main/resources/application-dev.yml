@@ -1,0 +1,30 @@
+# 本地 / 联调开发（默认 profile，可通过 SPRING_PROFILES_ACTIVE=dev 显式指定）
+spring:
+  datasource:
+    url: ${SKILLSOPS_DB_URL:jdbc:mysql://127.0.0.1:3306/skillsops?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&createDatabaseIfNotExist=true}
+    username: ${SKILLSOPS_DB_USERNAME:root}
+    password: ${SKILLSOPS_DB_PASSWORD:}
+    hikari:
+      maximum-pool-size: 10
+      leak-detection-threshold: 60000
+  data:
+    redis:
+      host: ${SKILLSOPS_REDIS_HOST:127.0.0.1}
+      port: ${SKILLSOPS_REDIS_PORT:6379}
+      password: ${SKILLSOPS_REDIS_PASSWORD:}
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+logging:
+  level:
+    root: INFO
+    com.skillsops: DEBUG
+    org.springframework.jdbc.core: DEBUG
+
+server:
+  servlet:
+    session:
+      cookie:
+        secure: false
+        same-site: lax

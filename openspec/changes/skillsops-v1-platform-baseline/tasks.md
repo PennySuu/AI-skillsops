@@ -26,12 +26,12 @@ node scripts/verify-traceability.mjs
 
 ### 1.1 后端：Maven + Spring Boot 工程骨架
 
-- [ ] 1.1.1 在 `backend/` 建立 **Maven** 工程：Java **17**、**Spring Boot 3.3.x**、依赖管理 BOM；启用 `spring-boot-starter-web`、`validation`、`security`（或按设计启用）、`mybatis-spring-boot-starter`、`mysql-connector-j`、`flyway-core`、`spring-boot-starter-data-redis`（按需）、`springdoc-openapi`、`spring-boot-starter-actuator`、`micrometer-registry-prometheus`（按需）
-- [ ] 1.1.2 约定根包 **`com.skillsops`**，按领域划分子包（如 `com.skillsops.auth`、`com.skillsops.skill`、`com.skillsops.common`）；**禁止**任何 `example` 包路径与默认样例 `Application` 留在 `com.example`
-- [ ] 1.1.3 提供统一 **`ApiResponse<T>`**、`GlobalExceptionHandler`、`ErrorCode` 枚举，与 `openspec/config.yaml` 错误码命名对齐
-- [ ] 1.1.4 配置 **多环境**：`application.yml`（公共）+ **`application-dev.yml`** + **`application-prod.yml`**（数据源、Redis、Flyway、日志级别、Cookie `Secure`/`SameSite`、Session 超时等分环境差异）；`dev` 可开启 SQL 调试，`prod` 强制脱敏与精简日志
-- [ ] 1.1.5 集成 **Flyway**：迁移脚本位于 `backend/src/main/resources/db/migration`；**本地与默认 `dev` profile 启动时自动 `migrate`**；`prod` 仅允许受控迁移（文档说明运维策略）；**禁止**依赖手工执行 SQL 才能启动
-- [ ] 1.1.6 提供 **`README-backend.md`**：JDK/Maven 版本、**`SPRING_PROFILES_ACTIVE=dev`** 启动方式、必填环境变量清单、Flyway 说明
+- [x] 1.1.1 在 `backend/` 建立 **Maven** 工程：Java **17**、**Spring Boot 3.3.x**、依赖管理 BOM；启用 `spring-boot-starter-web`、`validation`、`security`（或按设计启用）、`mybatis-spring-boot-starter`、`mysql-connector-j`、`flyway-core`、`spring-boot-starter-data-redis`（按需）、`springdoc-openapi`、`spring-boot-starter-actuator`、`micrometer-registry-prometheus`（按需）
+- [x] 1.1.2 约定根包 **`com.skillsops`**，按领域划分子包（如 `com.skillsops.auth`、`com.skillsops.skill`、`com.skillsops.common`）；**禁止**任何 `example` 包路径与默认样例 `Application` 留在 `com.example`
+- [x] 1.1.3 提供统一 **`ApiResponse<T>`**、`GlobalExceptionHandler`、`ErrorCode` 枚举，与 `openspec/config.yaml` 错误码命名对齐
+- [x] 1.1.4 配置 **多环境**：`application.yml`（公共）+ **`application-dev.yml`** + **`application-prod.yml`**（数据源、Redis、Flyway、日志级别、Cookie `Secure`/`SameSite`、Session 超时等分环境差异）；`dev` 可开启 SQL 调试，`prod` 强制脱敏与精简日志
+- [x] 1.1.5 集成 **Flyway**：迁移脚本位于 `backend/src/main/resources/db/migration`；**本地与默认 `dev` profile 启动时自动 `migrate`**；`prod` 仅允许受控迁移（文档说明运维策略）；**禁止**依赖手工执行 SQL 才能启动
+- [x] 1.1.6 在仓库根目录 **`README.md`** 中编写**后端**章节：JDK/Maven 版本、**`SPRING_PROFILES_ACTIVE=dev`** 启动方式、必填环境变量清单、Flyway 说明（**不**单独维护 `README-backend.md`）
 
 ### 1.2 前端：Vite + Vue 工程骨架
 
@@ -39,7 +39,7 @@ node scripts/verify-traceability.mjs
 - [ ] 1.2.2 配置 **多环境**：**`.env.development`**、**`.env.production`**，以及 **`.env.example`**（无密钥，仅键名说明）；`VITE_API_BASE_URL` 等在 `import.meta.env` 中类型声明（`env.d.ts`）
 - [ ] 1.2.3 `vite.config.ts` 按 `mode` 区分 **`server.proxy`（开发）** 与 **生产 `base`/CDN** 策略；构建产物含 `sourcemap` 策略说明（prod 可选关闭以减体积）
 - [ ] 1.2.4 接入 **Naive UI**、全局样式 Tokens（Sass + CSS Modules 基座）、`layouts/` 默认布局（顶栏 + 内容区）
-- [ ] 1.2.5 提供 **`README-frontend.md`**：Node 版本、`pnpm|npm` 脚本、`development`/`production` 构建与预览、环境变量说明
+- [ ] 1.2.5 在 **`README.md`** 中编写**前端**章节：Node 版本、**`npm`** 脚本（安装与 `development`/`production` 构建、预览）、环境变量说明（**不**单独维护 `README-frontend.md`；包管理统一 **`npm`**，不用 pnpm）
 
 ### 1.3 测试与 CI 基线
 
@@ -128,7 +128,7 @@ node scripts/verify-traceability.mjs
 
 - [ ] 9.1 **联调**：前后端 **dev** profile 对齐 Cookie 域、CORS、`SameSite`、CSRF 头；修复联调节点 A–D（见评审文档）
 - [ ] 9.2 **发布**：**prod** 构建检查清单：HTTPS、Cookie `Secure`、关闭敏感 Actuator、Flyway **仅迁移不 clean**、前端 **production** 包体与 CDN
-- [ ] 9.3 **文档**：根 `README.md` 链到前后端 README；**环境变量矩阵**（dev/prod）一页说明
+- [ ] 9.3 **文档**：根 `README.md` 已汇总前后端启动与运维说明（见 §1.1.6 / §1.2.5）；**环境变量矩阵**（dev/prod）一页说明
 - [ ] 9.4 **OpenSpec**：变更保持 `openspec validate skillsops-v1-platform-baseline --type change --strict` 通过；完成后 **`openspec archive`** 合并入 `openspec/specs/`；更新 `doc/` 变更记录
 
 ---
