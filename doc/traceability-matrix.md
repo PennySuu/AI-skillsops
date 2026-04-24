@@ -35,7 +35,7 @@
 | AUTH-007 | 后端/config | 统一响应 envelope + 错误码映射 | `auth-session-security` 响应规范 | `ApiResponse` + `ControllerAdvice` | 统一错误处理器 | BE 响应契约测试 | 1.1.3,2.1,2.3 | 已完成 |
 | AUTH-008 | 后端 | `X-Request-ID` / `Idempotency-Key` | `auth-session-security` 可观测性与幂等 | 请求头接入与校验 | axios 拦截器注入 | FE 请求头单测；BE 幂等冲突 | 2.2,5.2,8.1 | 进行中 |
 | MKT-001 | 产品 | 市场仅展示已上架 Skill | `market-install-rating` 市场可见性 | `GET /v1/market/skills` 过滤 published | 市场列表展示 | BE 列表过滤；E2E 可见性 | 5.1,5.4,5.6 | 进行中 |
-| MKT-002 | 产品/后端 | 市场筛选+排序+分页 | `market-install-rating` 列表检索 | page/size/category/q/sort | 筛选条、分页组件 | 契约参数测试；FE 查询状态测试 | 2.1,5.1,5.4 | 进行中 |
+| MKT-002 | 产品/后端 | 市场筛选+排序+分页 | `market-install-rating` 列表检索 | page/size/category/q/sort | 筛选条、分页组件 | 契约参数测试；FE 查询状态测试 | 2.1,5.1,5.4 | 已完成 |
 | MKT-003 | 产品/后端 | 详情聚合（版本/评分/安装） | `market-install-rating` 详情查询 | `GET /v1/market/skills/{skillId}` | 详情页模块渲染 | BE DTO 集成；FE 组件渲染 | 5.1,5.4,5.6 | 进行中 |
 | MKT-004 | 产品 | 安装仅复制命令，不执行脚本 | `market-install-rating` 安装方式 | 安装命令签发接口 | 复制命令按钮 | FE clipboard 测试 | 5.2,5.5,5.6 | 进行中 |
 | MKT-005 | 产品/后端 | 安装命令短时签名、短TTL、单次可用 | `market-install-rating` 安装命令签发 | `POST /v1/skills/{skillId}/install-command` | 复制结果提示 | BE 过期/重复消费测试 | 5.2,5.5,5.6 | 进行中 |
@@ -76,7 +76,7 @@
 | NFR-001 | 前端/后端评审 | CI 门禁（lint/typecheck/test/build, mvn verify） | `tasks` CI 要求 | Maven verify | FE pipeline | CI 结果 | 1.3.4 | 已完成 |
 | NFR-002 | 后端评审 | 可观测性（Actuator/Prometheus/日志） | `design` D7 + `tasks` | Micrometer + JSON 日志 | 前端错误上报对接 | 监控冒烟 | 8.1,8.2 | 未开始 |
 | NFR-003 | 前端评审 | 错误监控与 Web Vitals | `tasks` 非功能 | 无 | Sentry + 指标采集 | FE 冒烟 | 8.2 | 未开始 |
-| NFR-004 | 产品/前端评审 | 错误态/空态/重试一致交互 | `market-install-rating` + `workspace-admin-operations` | 错误码语义 | BaseErrorBlock/BaseEmpty | FE 组件与 E2E | 5.4,7.3 | 未开始 |
+| NFR-004 | 产品/前端评审 | 错误态/空态/重试一致交互 | `market-install-rating` + `workspace-admin-operations` | 错误码语义 | BaseErrorBlock/BaseEmpty | FE 组件与 E2E | 5.4,7.3 | 进行中 |
 
 ## 3. 覆盖率检查（手动）
 
