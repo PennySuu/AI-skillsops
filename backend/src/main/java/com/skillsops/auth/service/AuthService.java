@@ -68,6 +68,23 @@ public class AuthService {
         }
     }
 
+    public AuthProfileResponse currentProfile(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            throw new BusinessException(ErrorCode.AUTH_TOKEN_EXPIRED, "登录态已失效，请重新登录");
+        }
+        Object userId = session.getAttribute(SESSION_USER_ID);
+        Object userRole = session.getAttribute(SESSION_USER_ROLE);
+        if (!(userId instanceof Long) || !(userRole instanceof String roleValue)) {
+            throw new BusinessException(ErrorCode.AUTH_TOKEN_EXPIRED, "登录态已失效，请重新登录");
+        }
+        UserAccount account = userAccountMapper.findById((Long) userId);
+        if (account == null) {
+            throw new BusinessException(ErrorCode.AUTH_TOKEN_EXPIRED, "登录态已失效，请重新登录");
+        }
+        return new AuthProfileResponse(account.id(), account.username(), roleValue, SESSION_EXPIRE_SECONDS);
+    }
+
     private AuthProfileResponse buildSession(UserAccount account, HttpServletRequest request) {
         HttpSession session = request.getSession(true);
         session.setAttribute(SESSION_USER_ID, account.id());

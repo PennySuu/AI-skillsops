@@ -72,4 +72,33 @@ class AuthControllerSecurityTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.username").value("demo_user"));
     }
+
+    @Test
+    void should_allowLoginAndLogout_when_csrfValid() throws Exception {
+        Mockito.when(authService.login(any(), any()))
+                .thenReturn(new AuthProfileResponse(2L, "demo_user", "USER", 1800L));
+
+        String csrfToken = mockMvc.perform(get("/v1/auth/csrf-token"))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getCookie("XSRF-TOKEN")
+                .getValue();
+
+        mockMvc.perform(post("/v1/auth/login")
+                        .cookie(new jakarta.servlet.http.Cookie("XSRF-TOKEN", csrfToken))
+                        .header("X-CSRF-Token", csrfToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"username":"demo_user","password":"Passw0rd!"}
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.userId").value(2));
+
+        mockMvc.perform(post("/v1/auth/logout")
+                        .cookie(new jakarta.servlet.http.Cookie("XSRF-TOKEN", csrfToken))
+                        .header("X-CSRF-Token", csrfToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+    }
 }

@@ -1,4 +1,4 @@
-package com.skillsops.auth.controller;
+﻿package com.skillsops.auth.controller;
 
 import com.skillsops.auth.dto.AuthLoginRequest;
 import com.skillsops.auth.dto.AuthProfileResponse;
@@ -46,6 +46,16 @@ public class AuthController {
     public ResponseEntity<ApiResponse<String>> issueCsrfToken(HttpServletResponse response) {
         String token = csrfTokenService.issueToken(response);
         return ResponseEntity.ok(ApiResponse.ok(token));
+    }
+
+    @GetMapping("/me")
+    @Operation(summary = "当前会话用户信息")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "查询成功"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "登录态失效", content = @Content(schema = @Schema(implementation = ApiResponse.class), examples = @ExampleObject(value = "{\"success\":false,\"code\":\"AUTH_TOKEN_EXPIRED\",\"message\":\"登录态已失效，请重新登录\",\"data\":null}"))),
+    })
+    public ResponseEntity<ApiResponse<AuthProfileResponse>> me(HttpServletRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok(authService.currentProfile(request)));
     }
 
     @PostMapping("/register")

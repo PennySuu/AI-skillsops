@@ -71,7 +71,7 @@ node scripts/verify-traceability.mjs
 - [x] 3.2 **后端**：`User` 领域模型、Flyway **`Vxxx__user.sql`**、唯一用户名索引；登录失败限流钩子（预留 Sentinel）
 - [x] 3.3 **前端**：`/login`、`/register` 页面；表单校验与错误码文案；顶部用户菜单提供“退出登录”；**登录后默认 `/market`**，支持 `returnUrl`；Axios 拦截器附加 **CSRF** 与 **401 → 登录回跳**
 - [x] 3.4 **前端**：`authStore`、路由 `beforeEach`：`requiresAuth`、`meta.roles`（USER/ADMIN）
-- [ ] 3.5 **测试**：后端 **`@WebMvcTest`/`MockMvc`** 或切片测试覆盖注册/登录/登出/CSRF 缺失；**Testcontainers** 集成测试一条完整登录-登出链路
+- [x] 3.5 **测试**：后端 **`@WebMvcTest`/`MockMvc`** 或切片测试覆盖注册/登录/登出/CSRF 缺失；**Testcontainers** 集成测试一条完整登录-登出链路
 - [ ] 3.6 **测试**：前端 Vitest 覆盖 `useAuth` 或路由守卫逻辑（mock Pinia）；**Playwright** 一条用例：注册/登录 → 进入市场（可用 **MSW** 或真实后端 profile=test）
 
 ---
