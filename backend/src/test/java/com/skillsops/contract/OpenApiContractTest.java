@@ -10,6 +10,7 @@ import com.skillsops.skill.mapper.AuditRecordMapper;
 import com.skillsops.skill.mapper.InstallRecordMapper;
 import com.skillsops.skill.mapper.SkillMapper;
 import com.skillsops.skill.mapper.SkillVersionMapper;
+import com.skillsops.skill.service.InstallCommandService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -49,6 +50,9 @@ class OpenApiContractTest {
 
     @MockBean
     private InstallRecordMapper installRecordMapper;
+
+    @MockBean
+    private InstallCommandService installCommandService;
 
     @Test
     void should_exposeExpectedV1Paths_when_openApiGenerated() throws Exception {

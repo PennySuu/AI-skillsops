@@ -11,4 +11,32 @@
             installed_version = VALUES(installed_version),
             installed_at = CURRENT_TIMESTAMP
     </insert>
+
+    <select id="listByUser" resultType="com.skillsops.user.dto.UserInstallItemDTO">
+        SELECT ir.skill_id AS skillId,
+               s.name AS skillName,
+               DATE_FORMAT(ir.installed_at, '%Y-%m-%dT%H:%i:%s') AS installedAt,
+               ir.installed_version AS installedVersion,
+               sv.version AS latestVersion,
+               CASE WHEN sv.version IS NOT NULL AND ir.installed_version IS NOT NULL AND sv.version <> ir.installed_version THEN TRUE ELSE FALSE END AS updateAvailable,
+               CASE WHEN s.status = 'offline' THEN TRUE ELSE FALSE END AS offline
+        FROM install_record ir
+        INNER JOIN skill s ON s.id = ir.skill_id
+        LEFT JOIN skill_version sv ON sv.id = (
+            SELECT id
+            FROM skill_version
+            WHERE skill_id = ir.skill_id
+            ORDER BY created_at DESC, id DESC
+            LIMIT 1
+        )
+        WHERE ir.user_id = #{userId}
+        ORDER BY ir.installed_at DESC, ir.id DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <select id="countByUser" resultType="long">
+        SELECT COUNT(1)
+        FROM install_record
+        WHERE user_id = #{userId}
+    </select>
 </mapper>
