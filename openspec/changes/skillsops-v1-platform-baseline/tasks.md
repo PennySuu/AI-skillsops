@@ -101,7 +101,7 @@ node scripts/verify-traceability.mjs
 ## 6. 评分与评论（后端 / 前端 / 测试）
 
 - [x] 6.1 **后端**：Flyway `rating` 表、`uk_user_skill`；`PUT /v1/skills/{id}/ratings`；**未安装** `422 RATING_REQUIRES_INSTALL`；聚合 `avg_rating`/`rating_count` 与缓存失效
-- [ ] 6.2 **前端**：`RatingEditor`：仅安装后可提交、评论可选、乐观更新失败回滚；详情页列表刷新与 Query invalidation
+- [x] 6.2 **前端**：`RatingEditor`：仅安装后可提交、评论可选、乐观更新失败回滚；详情页列表刷新与 Query invalidation
 - [ ] 6.3 **测试**：后端单测/集成测覆盖 **未安装拦截**、更新覆盖；前端单测覆盖分支；E2E：安装后评分 → 均分更新（**`<=5s` 口径在测试中放宽为轮询断言**）
 
 ---
