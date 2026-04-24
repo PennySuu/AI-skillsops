@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.skillsops.skill.mapper.SkillVersionMapper">
+
+    <resultMap id="SkillVersionMap" type="com.skillsops.skill.domain.SkillVersion">
+        <id column="id" property="id"/>
+        <result column="skill_id" property="skillId"/>
+        <result column="version" property="version"/>
+        <result column="changelog" property="changelog"/>
+        <result column="resource_url" property="resourceUrl"/>
+        <result column="created_at" property="createdAt"/>
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO skill_version (skill_id, version, changelog, resource_url)
+        VALUES (#{skillId}, #{version}, #{changelog}, #{resourceUrl})
+    </insert>
+
+    <select id="findLatestBySkillId" resultMap="SkillVersionMap">
+        SELECT id, skill_id, version, changelog, resource_url, created_at
+        FROM skill_version
+        WHERE skill_id = #{skillId}
+        ORDER BY created_at DESC, id DESC
+        LIMIT 1
+    </select>
+
+    <select id="listBySkillId" resultMap="SkillVersionMap">
+        SELECT id, skill_id, version, changelog, resource_url, created_at
+        FROM skill_version
+        WHERE skill_id = #{skillId}
+        ORDER BY created_at DESC, id DESC
+    </select>
+</mapper>

@@ -1,4 +1,4 @@
-﻿package com.skillsops.auth.controller;
+package com.skillsops.auth.controller;
 
 import com.skillsops.auth.dto.AuthLoginRequest;
 import com.skillsops.auth.dto.AuthProfileResponse;

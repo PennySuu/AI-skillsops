@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.skillsops.review.mapper.ReviewRecordMapper">
+
+    <resultMap id="ReviewRecordMap" type="com.skillsops.review.domain.ReviewRecord">
+        <id column="id" property="id"/>
+        <result column="skill_id" property="skillId"/>
+        <result column="status" property="status"/>
+        <result column="reason" property="reason"/>
+        <result column="submitted_by" property="submittedBy"/>
+        <result column="reviewed_by" property="reviewedBy"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <resultMap id="PendingReviewItemMap" type="com.skillsops.review.dto.PendingReviewItem">
+        <result column="id" property="reviewId"/>
+        <result column="skill_id" property="skillId"/>
+        <result column="submitted_by" property="submittedBy"/>
+        <result column="created_at" property="createdAt"/>
+    </resultMap>
+
+    <insert id="insertPending">
+        INSERT INTO review_record (skill_id, status, submitted_by)
+        VALUES (#{skillId}, 'pending', #{submittedBy})
+    </insert>
+
+    <select id="findById" resultMap="ReviewRecordMap">
+        SELECT id, skill_id, status, reason, submitted_by, reviewed_by, created_at, updated_at
+        FROM review_record
+        WHERE id = #{id}
+    </select>
+
+    <select id="listPending" resultMap="PendingReviewItemMap">
+        SELECT id, skill_id, submitted_by, created_at
+        FROM review_record
+        WHERE status = 'pending'
+        ORDER BY created_at ASC
+    </select>
+
+    <update id="updateStatus">
+        UPDATE review_record
+        SET status = #{status},
+            reason = #{reason},
+            reviewed_by = #{reviewedBy}
+        WHERE id = #{id}
+    </update>
+</mapper>

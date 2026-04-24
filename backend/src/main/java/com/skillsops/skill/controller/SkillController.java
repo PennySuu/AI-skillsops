@@ -6,7 +6,11 @@ import com.skillsops.common.api.error.ErrorCode;
 import com.skillsops.common.exception.BusinessException;
 import com.skillsops.skill.dto.CreateSkillRequest;
 import com.skillsops.skill.dto.CreateSkillVersionRequest;
+import com.skillsops.skill.dto.OfflineSkillRequest;
 import com.skillsops.skill.dto.UpdateSkillRequest;
+import com.skillsops.review.service.ReviewService;
+import com.skillsops.skill.service.SkillLifecycleService;
+import jakarta.servlet.http.HttpServletRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -32,14 +36,25 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 public class SkillController {
 
+    private final SkillLifecycleService skillLifecycleService;
+    private final ReviewService reviewService;
+
+    public SkillController(SkillLifecycleService skillLifecycleService, ReviewService reviewService) {
+        this.skillLifecycleService = skillLifecycleService;
+        this.reviewService = reviewService;
+    }
+
     @PostMapping
     @Operation(summary = "创建 Skill 草稿")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "创建成功", content = @Content(schema = @Schema(implementation = ApiResponse.class), examples = @ExampleObject(value = OpenApiExamples.OK_EMPTY))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "422", description = "参数校验失败", content = @Content(schema = @Schema(implementation = ApiResponse.class), examples = @ExampleObject(value = OpenApiExamples.VALIDATION_FAILED))),
     })
-    public ResponseEntity<ApiResponse<Void>> createSkill(@Valid @RequestBody CreateSkillRequest request) {
-        throw todo();
+    public ResponseEntity<ApiResponse<Void>> createSkill(
+            @Valid @RequestBody CreateSkillRequest request,
+            HttpServletRequest httpServletRequest) {
+        skillLifecycleService.createDraft(request, httpServletRequest);
+        return ResponseEntity.ok(ApiResponse.okEmpty());
     }
 
     @PatchMapping("/{skillId}")
@@ -50,8 +65,10 @@ public class SkillController {
     })
     public ResponseEntity<ApiResponse<Void>> updateSkill(
             @PathVariable @Positive Long skillId,
-            @Valid @RequestBody UpdateSkillRequest request) {
-        throw todo();
+            @Valid @RequestBody UpdateSkillRequest request,
+            HttpServletRequest httpServletRequest) {
+        skillLifecycleService.updateSkill(skillId, request, httpServletRequest);
+        return ResponseEntity.ok(ApiResponse.okEmpty());
     }
 
     @PostMapping("/{skillId}/submit-review")
@@ -59,8 +76,11 @@ public class SkillController {
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "提交成功", content = @Content(schema = @Schema(implementation = ApiResponse.class), examples = @ExampleObject(value = OpenApiExamples.OK_EMPTY))),
     })
-    public ResponseEntity<ApiResponse<Void>> submitReview(@PathVariable @Positive Long skillId) {
-        throw todo();
+    public ResponseEntity<ApiResponse<Void>> submitReview(
+            @PathVariable @Positive Long skillId,
+            HttpServletRequest httpServletRequest) {
+        skillLifecycleService.submitReview(skillId, httpServletRequest);
+        return ResponseEntity.ok(ApiResponse.okEmpty());
     }
 
     @PostMapping("/{skillId}/versions")
@@ -71,8 +91,15 @@ public class SkillController {
     })
     public ResponseEntity<ApiResponse<Void>> createVersion(
             @PathVariable @Positive Long skillId,
-            @Valid @RequestBody CreateSkillVersionRequest request) {
-        throw todo();
+            @Valid @RequestBody CreateSkillVersionRequest request,
+            HttpServletRequest httpServletRequest) {
+        skillLifecycleService.createVersion(
+                skillId,
+                request.version(),
+                request.changelog(),
+                request.resourceUrl(),
+                httpServletRequest);
+        return ResponseEntity.ok(ApiResponse.okEmpty());
     }
 
     @PostMapping("/{skillId}/install-command")
@@ -85,6 +112,20 @@ public class SkillController {
             @PathVariable @Positive Long skillId,
             @Parameter(description = "幂等键", required = true) @RequestHeader("Idempotency-Key") @NotBlank String idempotencyKey) {
         throw todo();
+    }
+
+    @PostMapping("/{skillId}/offline")
+    @Operation(summary = "管理员下架 Skill")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "下架成功", content = @Content(schema = @Schema(implementation = ApiResponse.class), examples = @ExampleObject(value = OpenApiExamples.OK_EMPTY))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "422", description = "原因校验失败", content = @Content(schema = @Schema(implementation = ApiResponse.class), examples = @ExampleObject(value = OpenApiExamples.VALIDATION_FAILED))),
+    })
+    public ResponseEntity<ApiResponse<Void>> offlineSkill(
+            @PathVariable @Positive Long skillId,
+            @Valid @RequestBody OfflineSkillRequest request,
+            HttpServletRequest httpServletRequest) {
+        reviewService.offlineSkill(skillId, request.reason(), httpServletRequest);
+        return ResponseEntity.ok(ApiResponse.okEmpty());
     }
 
     private BusinessException todo() {

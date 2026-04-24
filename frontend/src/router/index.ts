@@ -30,10 +30,22 @@ const router = createRouter({
       meta: { requiresAuth: true } satisfies AppRouteMeta,
     },
     {
+      path: '/workspace/published',
+      name: 'workspacePublished',
+      component: () => import('@/views/WorkspacePublishedView.vue'),
+      meta: { requiresAuth: true } satisfies AppRouteMeta,
+    },
+    {
       path: '/workspace/reviews',
       name: 'workspaceReviews',
-      component: () => import('@/views/PlaceholderHomeView.vue'),
+      component: () => import('@/views/WorkspaceReviewsView.vue'),
       meta: { requiresAuth: true, roles: ['ADMIN'] } satisfies AppRouteMeta,
+    },
+    {
+      path: '/workspace/installed',
+      name: 'workspaceInstalled',
+      component: () => import('@/views/PlaceholderHomeView.vue'),
+      meta: { requiresAuth: true } satisfies AppRouteMeta,
     },
     {
       path: '/403',

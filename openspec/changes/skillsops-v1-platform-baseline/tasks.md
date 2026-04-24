@@ -78,12 +78,12 @@ node scripts/verify-traceability.mjs
 
 ## 4. Skill 生命周期、审核与版本（后端 / 前端 / 测试）
 
-- [ ] 4.1 **后端**：Flyway 创建 **`skill`、`skill_version`、`audit_record`** 及索引；MyBatis Mapper；状态机 `draft/pending/published/offline`；`pending` **禁止 PATCH**
-- [ ] 4.2 **后端**：`POST /v1/skills`、`PATCH /v1/skills/{id}`、`POST /v1/skills/{skillId}/submit-review`；`resourceUrl` 必填；`POST /v1/skills/{skillId}/versions` 版本唯一 `409 SKILL_VERSION_CONFLICT`
-- [ ] 4.3 **后端**：`GET /v1/reviews/pending`、`POST /v1/reviews/{reviewId}/approve`、`POST /v1/reviews/{reviewId}/reject`（理由 10–200）；管理员下架接口（若独立路径，与评审一致）
-- [ ] 4.4 **前端**：`/workspace/published` 列表、创建/编辑表单、审核中禁用编辑提示、发布版本弹窗、拒绝理由展示
-- [ ] 4.5 **前端**：`/workspace/reviews` 管理员队列、通过/拒绝弹窗；路由 **ADMIN** 守卫与 403 页
-- [ ] 4.6 **测试**：后端 Service 单测覆盖状态迁移与非法迁移；集成测试覆盖 **提交审核 → 通过/拒绝**；前端组件测试覆盖 **审核中禁用** 与拒绝表单校验；E2E 覆盖作者与管理员的审核闭环（可选用 **test profile 种子数据**）
+- [x] 4.1 **后端**：Flyway 创建 **`skill`、`skill_version`、`audit_record`** 及索引；MyBatis Mapper；状态机 `draft/pending/published/offline`；`pending` **禁止 PATCH**
+- [x] 4.2 **后端**：`POST /v1/skills`、`PATCH /v1/skills/{id}`、`POST /v1/skills/{skillId}/submit-review`；`resourceUrl` 必填；`POST /v1/skills/{skillId}/versions` 版本唯一 `409 SKILL_VERSION_CONFLICT`
+- [x] 4.3 **后端**：`GET /v1/reviews/pending`、`POST /v1/reviews/{reviewId}/approve`、`POST /v1/reviews/{reviewId}/reject`（理由 10–200）；管理员下架接口（若独立路径，与评审一致）
+- [x] 4.4 **前端**：`/workspace/published` 列表、创建/编辑表单、审核中禁用编辑提示、发布版本弹窗、拒绝理由展示
+- [x] 4.5 **前端**：`/workspace/reviews` 管理员队列、通过/拒绝弹窗；路由 **ADMIN** 守卫与 403 页
+- [x] 4.6 **测试**：后端 Service 单测覆盖状态迁移与非法迁移；集成测试覆盖 **提交审核 → 通过/拒绝**；前端组件测试覆盖 **审核中禁用** 与拒绝表单校验；E2E 覆盖作者与管理员的审核闭环（可选用 **test profile 种子数据**）
 
 ---
 

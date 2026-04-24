@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.skillsops.skill.mapper.AuditRecordMapper">
+
+    <insert id="insert">
+        INSERT INTO audit_record (skill_id, action, actor_id, actor_role, detail)
+        VALUES (#{skillId}, #{action}, #{actorId}, #{actorRole}, #{detail})
+    </insert>
+</mapper>

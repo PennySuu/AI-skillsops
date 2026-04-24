@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.skillsops.skill.mapper.SkillMapper">
+
+    <resultMap id="SkillMap" type="com.skillsops.skill.domain.Skill">
+        <id column="id" property="id"/>
+        <result column="author_id" property="authorId"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="name" property="name"/>
+        <result column="description" property="description"/>
+        <result column="resource_url" property="resourceUrl"/>
+        <result column="status" property="status" javaType="com.skillsops.skill.domain.SkillStatus"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO skill (author_id, category_id, name, description, resource_url, status)
+        VALUES (#{authorId}, #{categoryId}, #{name}, #{description}, #{resourceUrl}, #{status})
+    </insert>
+
+    <select id="findById" resultMap="SkillMap">
+        SELECT id, author_id, category_id, name, description, resource_url, status, created_at, updated_at
+        FROM skill
+        WHERE id = #{id}
+    </select>
+
+    <select id="findPublishedById" resultMap="SkillMap">
+        SELECT id, author_id, category_id, name, description, resource_url, status, created_at, updated_at
+        FROM skill
+        WHERE id = #{id}
+          AND status = 'published'
+    </select>
+
+    <select id="listPublished" resultType="com.skillsops.market.dto.MarketSkillSummaryDTO">
+        SELECT id,
+               name,
+               description,
+               0 AS avgRating,
+               0 AS ratingCount
+        FROM skill
+        WHERE status = 'published'
+        <if test="categoryId != null">
+            AND category_id = #{categoryId}
+        </if>
+        <if test="q != null and q != ''">
+            AND (name LIKE CONCAT('%', #{q}, '%')
+            OR description LIKE CONCAT('%', #{q}, '%'))
+        </if>
+        ORDER BY
+        <choose>
+            <when test="sortField == 'name'">
+                name
+            </when>
+            <otherwise>
+                updated_at
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="sortDirection == 'asc'">
+                ASC
+            </when>
+            <otherwise>
+                DESC
+            </otherwise>
+        </choose>
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <select id="countPublished" resultType="long">
+        SELECT COUNT(1)
+        FROM skill
+        WHERE status = 'published'
+        <if test="categoryId != null">
+            AND category_id = #{categoryId}
+        </if>
+        <if test="q != null and q != ''">
+            AND (name LIKE CONCAT('%', #{q}, '%')
+            OR description LIKE CONCAT('%', #{q}, '%'))
+        </if>
+    </select>
+
+    <update id="updateDraft">
+        UPDATE skill
+        SET name = COALESCE(#{name}, name),
+            description = COALESCE(#{description}, description),
+            resource_url = COALESCE(#{resourceUrl}, resource_url)
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE skill
+        SET status = #{status}
+        WHERE id = #{id}
+    </update>
+</mapper>

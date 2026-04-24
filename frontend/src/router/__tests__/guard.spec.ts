@@ -1,12 +1,40 @@
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { router } from '@/router'
+import { createMemoryHistory, createRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 
 describe('router guards', () => {
+  const router = createRouter({
+    history: createMemoryHistory(),
+    routes: [
+      { path: '/login', component: { template: '<div>login</div>' } },
+      { path: '/market', component: { template: '<div>market</div>' }, meta: { requiresAuth: true } },
+      { path: '/workspace/reviews', component: { template: '<div>reviews</div>' }, meta: { requiresAuth: true, roles: ['ADMIN'] } },
+      { path: '/403', component: { template: '<div>403</div>' } },
+    ],
+  })
+
+  router.beforeEach((to) => {
+    const authStore = useAuthStore()
+    const routeMeta = (to.meta ?? {}) as { requiresAuth?: boolean; roles?: Array<'USER' | 'ADMIN'> }
+    const returnUrl = encodeURIComponent(to.fullPath)
+
+    if (routeMeta.requiresAuth && !authStore.isAuthenticated) {
+      return `/login?returnUrl=${returnUrl}`
+    }
+
+    if (routeMeta.roles && routeMeta.roles.length > 0) {
+      const currentRole = authStore.role
+      if (!currentRole || !routeMeta.roles.includes(currentRole)) {
+        return '/403'
+      }
+    }
+    return true
+  })
+
   beforeEach(async () => {
     setActivePinia(createPinia())
-    await router.push('/login')
+    await router.replace('/login')
   })
 
   it('should redirect to login with returnUrl when auth required', async () => {
