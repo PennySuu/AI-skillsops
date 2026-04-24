@@ -50,7 +50,7 @@ const router = createRouter({
     {
       path: '/workspace/installed',
       name: 'workspaceInstalled',
-      component: () => import('@/views/PlaceholderHomeView.vue'),
+      component: () => import('@/views/WorkspaceInstalledView.vue'),
       meta: { requiresAuth: true } satisfies AppRouteMeta,
     },
     {

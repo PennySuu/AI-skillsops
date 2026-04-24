@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { NAlert, NButton, NCard, NEmpty, NResult, NSpace, NText, NTimeline, NTimelineItem } from 'naive-ui'
 import { getMarketSkillDetail } from '@/api/modules/market'
+import SkillInstallPanel from '@/components/market/SkillInstallPanel.vue'
 import type { SkillDetailDTO } from '@/types/api'
 
 const route = useRoute()
@@ -67,8 +68,15 @@ onMounted(() => {
         v-else-if="detail"
         :title="detail.name"
       >
-        <n-space vertical>
+        <n-space
+          vertical
+          :size="16"
+        >
           <n-text>{{ detail.description || '暂无描述' }}</n-text>
+          <SkillInstallPanel
+            :skill-id="detail.id"
+            :offline="offline"
+          />
           <n-text depth="3">
             版本时间线
           </n-text>

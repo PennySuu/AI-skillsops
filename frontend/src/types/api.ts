@@ -32,11 +32,18 @@ export interface SkillDetailDTO {
   }>
 }
 
+export interface InstallCommandDTO {
+  command: string
+}
+
 export interface UserInstallDTO {
   skillId: number
   skillName: string
   installedAt: string
+  installedVersion: string
   latestVersion: string
+  updateAvailable: boolean
+  offline: boolean
 }
 
 export type UserRole = 'USER' | 'ADMIN'

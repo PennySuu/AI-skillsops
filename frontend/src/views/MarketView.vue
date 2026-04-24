@@ -1,7 +1,19 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { NAlert, NButton, NEmpty, NGrid, NGridItem, NInput, NPagination, NSkeleton, NSpace, NSpin } from 'naive-ui'
+import {
+  NAlert,
+  NButton,
+  NEmpty,
+  NGrid,
+  NGridItem,
+  NInput,
+  NPagination,
+  NSelect,
+  NSkeleton,
+  NSpace,
+  NSpin,
+} from 'naive-ui'
 import { getMarketSkills } from '@/api/modules/market'
 import SkillCard from '@/components/market/SkillCard.vue'
 import type { SkillSummaryDTO } from '@/types/api'
@@ -21,6 +33,11 @@ const query = reactive({
 })
 
 const hasData = computed(() => items.value.length > 0)
+const sortOptions = [
+  { label: '最近更新', value: 'updatedAt,desc' },
+  { label: '名称升序', value: 'name,asc' },
+  { label: '名称降序', value: 'name,desc' },
+]
 
 async function loadMarketList(): Promise<void> {
   loading.value = true
@@ -81,6 +98,12 @@ onMounted(() => {
           clearable
           style="width: 160px"
           @keyup.enter="handleSearch"
+        />
+        <n-select
+          v-model:value="query.sort"
+          :options="sortOptions"
+          style="width: 180px"
+          @update:value="handleSearch"
         />
         <n-button
           type="primary"

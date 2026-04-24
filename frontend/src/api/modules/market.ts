@@ -1,5 +1,11 @@
 import { request, unwrapApiResponse } from '@/api/client'
-import type { PageResponse, SkillDetailDTO, SkillSummaryDTO, UserInstallDTO } from '@/types/api'
+import type {
+  InstallCommandDTO,
+  PageResponse,
+  SkillDetailDTO,
+  SkillSummaryDTO,
+  UserInstallDTO,
+} from '@/types/api'
 
 export async function getMarketSkills(params: {
   page?: number
@@ -23,4 +29,20 @@ export async function getMyInstalls(params: {
 }): Promise<PageResponse<UserInstallDTO>> {
   const response = await request.get('/v1/users/me/installs', { params })
   return unwrapApiResponse<PageResponse<UserInstallDTO>>(response)
+}
+
+export async function issueInstallCommand(
+  skillId: number,
+  idempotencyKey: string,
+): Promise<InstallCommandDTO> {
+  const response = await request.post(
+    `/v1/skills/${skillId}/install-command`,
+    {},
+    {
+      headers: {
+        'Idempotency-Key': idempotencyKey,
+      },
+    },
+  )
+  return unwrapApiResponse<InstallCommandDTO>(response)
 }
