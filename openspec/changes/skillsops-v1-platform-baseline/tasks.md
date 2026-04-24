@@ -1,4 +1,4 @@
-# SkillsOps V1 实现任务清单（生产级 · 垂直切片）
+﻿# SkillsOps V1 实现任务清单（生产级 · 垂直切片）
 
 > 依据 `proposal.md`、`design.md` 与 `specs/**/spec.md`。  
 > **硬性约束**：Java 根包 **`com.skillsops`**（及子包），**禁止** `com.example` / `org.example` 等占位包名；后端 **dev/prod**、前端 **development/production** 至少两套配置；本地启动 **自动执行 Flyway** 建表/演进；每项业务切片尽量 **后端 + 前端 + 测试** 同时闭环，避免「玩具工程」。
@@ -59,7 +59,7 @@ node scripts/verify-traceability.mjs
 
 ## 2. API 契约与 OpenAPI（后端 / 前端 / 测试）
 
-- [ ] 2.1 **后端**：按 `design.md` 接口表建立 **`/v1`** Controller 壳层 + DTO + Bean Validation；**SpringDoc** 生成 OpenAPI 3；JSON 示例与错误响应 schema 齐全
+- [x] 2.1 **后端**：按 `design.md` 接口表建立 **`/v1`** Controller 壳层 + DTO + Bean Validation；**SpringDoc** 生成 OpenAPI 3；JSON 示例与错误响应 schema 齐全
 - [ ] 2.2 **前端**：自 OpenAPI **生成或手维护** `types/` 与 `api/client` 封装（axios 实例：`withCredentials`、超时、`X-Request-ID`）；**development** 指向代理，**production** 指向 `VITE_API_BASE_URL`
 - [ ] 2.3 **测试**：契约快照或 **OpenAPI 校验测试**（如 schemathesis 可选）；前端对 **envelope** 解析做单元测试（mock axios 响应）
 

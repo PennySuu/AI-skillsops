@@ -35,7 +35,7 @@
 | AUTH-007 | 后端/config | 统一响应 envelope + 错误码映射 | `auth-session-security` 响应规范 | `ApiResponse` + `ControllerAdvice` | 统一错误处理器 | BE 响应契约测试 | 1.1.3,2.1,2.3 | 进行中 |
 | AUTH-008 | 后端 | `X-Request-ID` / `Idempotency-Key` | `auth-session-security` 可观测性与幂等 | 请求头接入与校验 | axios 拦截器注入 | FE 请求头单测；BE 幂等冲突 | 2.2,5.2,8.1 | 未开始 |
 | MKT-001 | 产品 | 市场仅展示已上架 Skill | `market-install-rating` 市场可见性 | `GET /v1/market/skills` 过滤 published | 市场列表展示 | BE 列表过滤；E2E 可见性 | 5.1,5.4,5.6 | 未开始 |
-| MKT-002 | 产品/后端 | 市场筛选+排序+分页 | `market-install-rating` 列表检索 | page/size/category/q/sort | 筛选条、分页组件 | 契约参数测试；FE 查询状态测试 | 2.1,5.1,5.4 | 未开始 |
+| MKT-002 | 产品/后端 | 市场筛选+排序+分页 | `market-install-rating` 列表检索 | page/size/category/q/sort | 筛选条、分页组件 | 契约参数测试；FE 查询状态测试 | 2.1,5.1,5.4 | 进行中 |
 | MKT-003 | 产品/后端 | 详情聚合（版本/评分/安装） | `market-install-rating` 详情查询 | `GET /v1/market/skills/{skillId}` | 详情页模块渲染 | BE DTO 集成；FE 组件渲染 | 5.1,5.4,5.6 | 未开始 |
 | MKT-004 | 产品 | 安装仅复制命令，不执行脚本 | `market-install-rating` 安装方式 | 安装命令签发接口 | 复制命令按钮 | FE clipboard 测试 | 5.2,5.5,5.6 | 未开始 |
 | MKT-005 | 产品/后端 | 安装命令短时签名、短TTL、单次可用 | `market-install-rating` 安装命令签发 | `POST /v1/skills/{skillId}/install-command` | 复制结果提示 | BE 过期/重复消费测试 | 5.2,5.5,5.6 | 未开始 |
@@ -66,7 +66,7 @@
 | OPS-001 | 产品 | 运营统计日/周/月，默认 7/30 天 | `workspace-admin-operations` 运营统计 | `GET /v1/admin/ops/dashboard` | 时间粒度切换 | BE 参数测试；FE 联动 | 7.2,7.3,7.4 | 未开始 |
 | OPS-002 | 产品/前端 | 指标卡 + 趋势 + TopN + 活跃作者 | `workspace-admin-operations` 运营看板 | 聚合查询/DTO | ECharts 页面 | FE 图表适配测试 | 7.2,7.3,7.4 | 未开始 |
 | OPS-003 | 产品/前端 | 局部错误不影响其他模块 | `workspace-admin-operations` 降级 | 局部接口错误可返回 | 组件局部错误态 | FE 局部降级测试 | 7.3,7.4 | 未开始 |
-| API-001 | 后端/config | RESTful + `/v1` + 统一响应 | `auth-session-security` + 其他 specs | OpenAPI + Controller | `api/client` 封装 | 契约测试 | 2.1,2.2,2.3 | 未开始 |
+| API-001 | 后端/config | RESTful + `/v1` + 统一响应 | `auth-session-security` + 其他 specs | OpenAPI + Controller | `api/client` 封装 | 契约测试 | 2.1,2.2,2.3 | 进行中 |
 | API-002 | 后端/config | 请求头：`X-Request-ID`、`Idempotency-Key`、CSRF | `auth-session-security` | 统一拦截器/过滤器 | axios 请求拦截器 | 头注入与校验测试 | 2.2,3.1,5.2 | 未开始 |
 | API-003 | 后端 | 异常码映射（401/403/409/422/429） | `auth-session-security` + 其他 specs | 错误码枚举与抛出 | 错误消息映射 | BE 异常映射测试 | 1.1.3,2.1,3.5 | 进行中 |
 | ENV-001 | 你的新增要求 | 后端至少 dev/prod 两套配置 | `tasks` 环境要求 | `application-dev/prod.yml` | 无 | 启动验证 | 1.1.4 | 已完成 |
