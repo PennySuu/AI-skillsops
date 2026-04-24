@@ -39,4 +39,13 @@
         FROM install_record
         WHERE user_id = #{userId}
     </select>
+
+    <select id="existsByUserAndSkill" resultType="boolean">
+        SELECT EXISTS(
+            SELECT 1
+            FROM install_record
+            WHERE user_id = #{userId}
+              AND skill_id = #{skillId}
+        )
+    </select>
 </mapper>

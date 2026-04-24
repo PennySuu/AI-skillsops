@@ -6,6 +6,8 @@ import com.skillsops.common.exception.BusinessException;
 import com.skillsops.market.dto.MarketSkillDetailDTO;
 import com.skillsops.market.dto.MarketSkillSummaryDTO;
 import com.skillsops.market.dto.SkillVersionDTO;
+import com.skillsops.rating.dto.SkillRatingSummary;
+import com.skillsops.rating.mapper.RatingMapper;
 import com.skillsops.skill.domain.Skill;
 import com.skillsops.skill.domain.SkillVersion;
 import com.skillsops.skill.mapper.SkillMapper;
@@ -20,14 +22,17 @@ public class MarketQueryService {
 
     private final SkillMapper skillMapper;
     private final SkillVersionMapper skillVersionMapper;
+    private final RatingMapper ratingMapper;
     private final MarketCacheService marketCacheService;
 
     public MarketQueryService(
             SkillMapper skillMapper,
             SkillVersionMapper skillVersionMapper,
+            RatingMapper ratingMapper,
             MarketCacheService marketCacheService) {
         this.skillMapper = skillMapper;
         this.skillVersionMapper = skillVersionMapper;
+        this.ratingMapper = ratingMapper;
         this.marketCacheService = marketCacheService;
     }
 
@@ -70,7 +75,14 @@ public class MarketQueryService {
         List<SkillVersionDTO> versions = skillVersionMapper.listBySkillId(skillId).stream()
                 .map(this::mapVersion)
                 .toList();
-        MarketSkillDetailDTO result = new MarketSkillDetailDTO(skill.id(), skill.name(), skill.description(), versions);
+        SkillRatingSummary summary = ratingMapper.summarizeBySkillId(skillId);
+        MarketSkillDetailDTO result = new MarketSkillDetailDTO(
+                skill.id(),
+                skill.name(),
+                skill.description(),
+                summary == null ? 0 : summary.avgRating(),
+                summary == null ? 0 : summary.ratingCount(),
+                versions);
         marketCacheService.cachePublishedDetail(skillId, result);
         return result;
     }

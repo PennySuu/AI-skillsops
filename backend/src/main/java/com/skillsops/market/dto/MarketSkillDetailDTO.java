@@ -6,5 +6,7 @@ public record MarketSkillDetailDTO(
         Long id,
         String name,
         String description,
+        double avgRating,
+        long ratingCount,
         List<SkillVersionDTO> versions) {
 }

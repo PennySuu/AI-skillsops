@@ -2,9 +2,8 @@ package com.skillsops.rating.controller;
 
 import com.skillsops.common.api.doc.OpenApiExamples;
 import com.skillsops.common.api.dto.ApiResponse;
-import com.skillsops.common.api.error.ErrorCode;
-import com.skillsops.common.exception.BusinessException;
 import com.skillsops.rating.dto.UpsertRatingRequest;
+import com.skillsops.rating.service.RatingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -26,6 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 public class RatingController {
 
+    private final RatingService ratingService;
+
+    public RatingController(RatingService ratingService) {
+        this.ratingService = ratingService;
+    }
+
     @PutMapping("/{skillId}/ratings")
     @Operation(summary = "提交或更新评分")
     @ApiResponses({
@@ -34,11 +39,9 @@ public class RatingController {
     })
     public ResponseEntity<ApiResponse<Void>> upsertRating(
             @PathVariable @Positive Long skillId,
-            @Valid @RequestBody UpsertRatingRequest request) {
-        throw todo();
-    }
-
-    private BusinessException todo() {
-        return new BusinessException(ErrorCode.OPERATION_FAILED, "接口壳层已就绪，业务实现将在后续任务补齐");
+            @Valid @RequestBody UpsertRatingRequest request,
+            jakarta.servlet.http.HttpServletRequest httpServletRequest) {
+        ratingService.upsertRating(skillId, request, httpServletRequest);
+        return ResponseEntity.ok(ApiResponse.okEmpty());
     }
 }

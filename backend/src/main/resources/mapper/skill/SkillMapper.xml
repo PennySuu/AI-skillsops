@@ -35,27 +35,34 @@
     </select>
 
     <select id="listPublished" resultType="com.skillsops.market.dto.MarketSkillSummaryDTO">
-        SELECT id,
-               name,
-               description,
-               0 AS avgRating,
-               0 AS ratingCount
-        FROM skill
-        WHERE status = 'published'
+        SELECT s.id,
+               s.name,
+               s.description,
+               COALESCE(r.avg_rating, 0) AS avgRating,
+               COALESCE(r.rating_count, 0) AS ratingCount
+        FROM skill s
+        LEFT JOIN (
+            SELECT skill_id,
+                   AVG(score) AS avg_rating,
+                   COUNT(1) AS rating_count
+            FROM rating
+            GROUP BY skill_id
+        ) r ON r.skill_id = s.id
+        WHERE s.status = 'published'
         <if test="categoryId != null">
-            AND category_id = #{categoryId}
+            AND s.category_id = #{categoryId}
         </if>
         <if test="q != null and q != ''">
-            AND (name LIKE CONCAT('%', #{q}, '%')
-            OR description LIKE CONCAT('%', #{q}, '%'))
+            AND (s.name LIKE CONCAT('%', #{q}, '%')
+            OR s.description LIKE CONCAT('%', #{q}, '%'))
         </if>
         ORDER BY
         <choose>
             <when test="sortField == 'name'">
-                name
+                s.name
             </when>
             <otherwise>
-                updated_at
+                s.updated_at
             </otherwise>
         </choose>
         <choose>

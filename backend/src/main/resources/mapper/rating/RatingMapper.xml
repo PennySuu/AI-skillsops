@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.skillsops.rating.mapper.RatingMapper">
+
+    <insert id="upsert">
+        INSERT INTO rating (user_id, skill_id, score, comment)
+        VALUES (#{userId}, #{skillId}, #{score}, #{comment})
+        ON DUPLICATE KEY UPDATE
+            score = VALUES(score),
+            comment = VALUES(comment)
+    </insert>
+
+    <select id="summarizeBySkillId" resultType="com.skillsops.rating.dto.SkillRatingSummary">
+        SELECT COALESCE(AVG(score), 0) AS avgRating,
+               COUNT(1) AS ratingCount
+        FROM rating
+        WHERE skill_id = #{skillId}
+    </select>
+</mapper>

@@ -20,4 +20,8 @@ public interface InstallRecordMapper {
             @Param("size") int size);
 
     long countByUser(@Param("userId") Long userId);
+
+    boolean existsByUserAndSkill(
+            @Param("userId") Long userId,
+            @Param("skillId") Long skillId);
 }

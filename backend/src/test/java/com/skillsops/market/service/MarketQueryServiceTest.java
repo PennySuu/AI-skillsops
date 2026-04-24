@@ -3,6 +3,7 @@ package com.skillsops.market.service;
 import com.skillsops.common.api.error.ErrorCode;
 import com.skillsops.common.exception.BusinessException;
 import com.skillsops.market.dto.MarketSkillSummaryDTO;
+import com.skillsops.rating.mapper.RatingMapper;
 import com.skillsops.skill.mapper.SkillMapper;
 import com.skillsops.skill.mapper.SkillVersionMapper;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,9 @@ class MarketQueryServiceTest {
 
     @Mock
     private SkillVersionMapper skillVersionMapper;
+
+    @Mock
+    private RatingMapper ratingMapper;
 
     @Mock
     private MarketCacheService marketCacheService;
