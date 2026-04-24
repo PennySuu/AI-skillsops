@@ -26,11 +26,11 @@
 
 | ID | 来源文档 | 来源条目 | OpenSpec 映射 | 后端实现点 | 前端实现点 | 测试用例 | Task Ref | 状态 |
 |---|---|---|---|---|---|---|---|---|
-| AUTH-001 | 产品 | 账号+密码注册，无邮箱验证码 | `auth-session-security` 注册 | `POST /v1/auth/register` | `/register` 表单 | BE: 注册成功/冲突；FE: 校验；E2E | 3.1,3.3,3.5,3.6 | 未开始 |
-| AUTH-002 | 产品/后端 | 登录并写 Cookie 会话 | `auth-session-security` 登录会话 | `POST /v1/auth/login` + HttpOnly Cookie | 登录页 + `authStore` | BE: Cookie 写入；FE: 登录态 | 3.1,3.3,3.4,3.5 | 未开始 |
-| AUTH-003 | 产品/后端 | 退出（登出）能力 | `auth-session-security` 退出 | `POST /v1/auth/logout` | 顶部菜单退出 | BE: 登出后 401；E2E 登出链路 | 3.1,3.3,3.5 | 未开始 |
+| AUTH-001 | 产品 | 账号+密码注册，无邮箱验证码 | `auth-session-security` 注册 | `POST /v1/auth/register` | `/register` 表单 | BE: 注册成功/冲突；FE: 校验；E2E | 3.1,3.3,3.5,3.6 | 进行中 |
+| AUTH-002 | 产品/后端 | 登录并写 Cookie 会话 | `auth-session-security` 登录会话 | `POST /v1/auth/login` + HttpOnly Cookie | 登录页 + `authStore` | BE: Cookie 写入；FE: 登录态 | 3.1,3.3,3.4,3.5 | 进行中 |
+| AUTH-003 | 产品/后端 | 退出（登出）能力 | `auth-session-security` 退出 | `POST /v1/auth/logout` | 顶部菜单退出 | BE: 登出后 401；E2E 登出链路 | 3.1,3.3,3.5 | 进行中 |
 | AUTH-004 | 产品/前端 | Token 过期回登录并保留 returnUrl | `auth-session-security` 会话过期 | 401 `AUTH_TOKEN_EXPIRED` | 路由守卫 + 回跳 | FE 守卫单测；E2E 回跳 | 3.3,3.4,3.6 | 未开始 |
-| AUTH-005 | 后端 | CSRF 为上线硬门禁 | `auth-session-security` CSRF | 写接口 CSRF 校验 | axios 注入 CSRF | BE: 缺失403；E2E 缺头拒绝 | 3.1,3.5 | 未开始 |
+| AUTH-005 | 后端 | CSRF 为上线硬门禁 | `auth-session-security` CSRF | 写接口 CSRF 校验 | axios 注入 CSRF | BE: 缺失403；E2E 缺头拒绝 | 3.1,3.5 | 进行中 |
 | AUTH-006 | 产品 | 角色 USER/ADMIN，作者按归属判定 | `auth-session-security` RBAC | 403 权限拦截 | 菜单裁剪 + 403 页 | FE 非管理员拦截；BE 权限测试 | 3.4,4.5,4.6 | 未开始 |
 | AUTH-007 | 后端/config | 统一响应 envelope + 错误码映射 | `auth-session-security` 响应规范 | `ApiResponse` + `ControllerAdvice` | 统一错误处理器 | BE 响应契约测试 | 1.1.3,2.1,2.3 | 已完成 |
 | AUTH-008 | 后端 | `X-Request-ID` / `Idempotency-Key` | `auth-session-security` 可观测性与幂等 | 请求头接入与校验 | axios 拦截器注入 | FE 请求头单测；BE 幂等冲突 | 2.2,5.2,8.1 | 进行中 |

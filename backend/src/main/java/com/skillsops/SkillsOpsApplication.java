@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /** SkillsOps 后端入口。 */
 @SpringBootApplication
-@MapperScan("com.skillsops.common.mapper")
+@MapperScan({"com.skillsops.auth.mapper", "com.skillsops.common.mapper"})
 public class SkillsOpsApplication {
 
     public static void main(String[] args) {

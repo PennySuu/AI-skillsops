@@ -67,8 +67,8 @@ node scripts/verify-traceability.mjs
 
 ## 3. 认证、会话与 CSRF（后端 / 前端 / 测试）
 
-- [ ] 3.1 **后端**：`POST /v1/auth/register`、`POST /v1/auth/login`、`POST /v1/auth/logout`；密码 **BCrypt/Argon2** 存储；**HttpOnly Session Cookie**；会话超时与注销；**双提交 Cookie 或 Header CSRF**，全部 **POST/PUT/PATCH/DELETE** 校验，`403 AUTH_CSRF_INVALID`
-- [ ] 3.2 **后端**：`User` 领域模型、Flyway **`Vxxx__user.sql`**、唯一用户名索引；登录失败限流钩子（预留 Sentinel）
+- [x] 3.1 **后端**：`POST /v1/auth/register`、`POST /v1/auth/login`、`POST /v1/auth/logout`；密码 **BCrypt/Argon2** 存储；**HttpOnly Session Cookie**；会话超时与注销；**双提交 Cookie 或 Header CSRF**，全部 **POST/PUT/PATCH/DELETE** 校验，`403 AUTH_CSRF_INVALID`
+- [x] 3.2 **后端**：`User` 领域模型、Flyway **`Vxxx__user.sql`**、唯一用户名索引；登录失败限流钩子（预留 Sentinel）
 - [ ] 3.3 **前端**：`/login`、`/register` 页面；表单校验与错误码文案；顶部用户菜单提供“退出登录”；**登录后默认 `/market`**，支持 `returnUrl`；Axios 拦截器附加 **CSRF** 与 **401 → 登录回跳**
 - [ ] 3.4 **前端**：`authStore`、路由 `beforeEach`：`requiresAuth`、`meta.roles`（USER/ADMIN）
 - [ ] 3.5 **测试**：后端 **`@WebMvcTest`/`MockMvc`** 或切片测试覆盖注册/登录/登出/CSRF 缺失；**Testcontainers** 集成测试一条完整登录-登出链路
