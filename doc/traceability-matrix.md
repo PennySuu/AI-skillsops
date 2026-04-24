@@ -32,8 +32,8 @@
 | AUTH-004 | 产品/前端 | Token 过期回登录并保留 returnUrl | `auth-session-security` 会话过期 | 401 `AUTH_TOKEN_EXPIRED` | 路由守卫 + 回跳 | FE 守卫单测；E2E 回跳 | 3.3,3.4,3.6 | 未开始 |
 | AUTH-005 | 后端 | CSRF 为上线硬门禁 | `auth-session-security` CSRF | 写接口 CSRF 校验 | axios 注入 CSRF | BE: 缺失403；E2E 缺头拒绝 | 3.1,3.5 | 未开始 |
 | AUTH-006 | 产品 | 角色 USER/ADMIN，作者按归属判定 | `auth-session-security` RBAC | 403 权限拦截 | 菜单裁剪 + 403 页 | FE 非管理员拦截；BE 权限测试 | 3.4,4.5,4.6 | 未开始 |
-| AUTH-007 | 后端/config | 统一响应 envelope + 错误码映射 | `auth-session-security` 响应规范 | `ApiResponse` + `ControllerAdvice` | 统一错误处理器 | BE 响应契约测试 | 1.1.3,2.1,2.3 | 进行中 |
-| AUTH-008 | 后端 | `X-Request-ID` / `Idempotency-Key` | `auth-session-security` 可观测性与幂等 | 请求头接入与校验 | axios 拦截器注入 | FE 请求头单测；BE 幂等冲突 | 2.2,5.2,8.1 | 未开始 |
+| AUTH-007 | 后端/config | 统一响应 envelope + 错误码映射 | `auth-session-security` 响应规范 | `ApiResponse` + `ControllerAdvice` | 统一错误处理器 | BE 响应契约测试 | 1.1.3,2.1,2.3 | 已完成 |
+| AUTH-008 | 后端 | `X-Request-ID` / `Idempotency-Key` | `auth-session-security` 可观测性与幂等 | 请求头接入与校验 | axios 拦截器注入 | FE 请求头单测；BE 幂等冲突 | 2.2,5.2,8.1 | 进行中 |
 | MKT-001 | 产品 | 市场仅展示已上架 Skill | `market-install-rating` 市场可见性 | `GET /v1/market/skills` 过滤 published | 市场列表展示 | BE 列表过滤；E2E 可见性 | 5.1,5.4,5.6 | 未开始 |
 | MKT-002 | 产品/后端 | 市场筛选+排序+分页 | `market-install-rating` 列表检索 | page/size/category/q/sort | 筛选条、分页组件 | 契约参数测试；FE 查询状态测试 | 2.1,5.1,5.4 | 进行中 |
 | MKT-003 | 产品/后端 | 详情聚合（版本/评分/安装） | `market-install-rating` 详情查询 | `GET /v1/market/skills/{skillId}` | 详情页模块渲染 | BE DTO 集成；FE 组件渲染 | 5.1,5.4,5.6 | 未开始 |
@@ -58,7 +58,7 @@
 | WS-001 | 产品/前端 | 工作台信息架构（发布/安装/审核/分类/统计） | `workspace-admin-operations` 路由结构 | 权限接口支持 | 菜单与侧边栏 | FE 路由快照测试 | 4.5,7.3 | 未开始 |
 | WS-002 | 前端 | `/market` 默认首页 | `workspace-admin-operations` 默认首页 | 登录后会话可用 | 登录成功跳转 `/market` | E2E 登录跳转 | 3.3,3.6 | 未开始 |
 | WS-003 | 前端 | `/workspace/reviews` 管理员路由 | `workspace-admin-operations` 路由守卫 | 403 权限返回 | `meta.roles` 守卫 | FE 守卫单测 | 3.4,4.5 | 未开始 |
-| WS-004 | 前端 | 菜单与路由同源（menu.config.ts） | `workspace-admin-operations` 菜单一致性 | 无 | 统一菜单配置 | FE 配置一致性测试 | 2.2,3.4,7.3 | 未开始 |
+| WS-004 | 前端 | 菜单与路由同源（menu.config.ts） | `workspace-admin-operations` 菜单一致性 | 无 | 统一菜单配置 | FE 配置一致性测试 | 2.2,3.4,7.3 | 进行中 |
 | WS-005 | 产品 | 我的发布页（状态/编辑/提交/发布） | `workspace-admin-operations` 我的发布 | 相关 API 支撑 | `/workspace/published` 页面 | FE 页面流测试 | 4.4,4.6 | 未开始 |
 | WS-006 | 产品 | 我的安装页（版本、可更新、下架标） | `workspace-admin-operations` 我的安装 | `GET /v1/users/me/installs` | `/workspace/installed` 页面 | FE 渲染测试 | 5.3,5.5,5.6 | 未开始 |
 | CAT-001 | 产品/后端 | 分类管理 CRUD + 启停 | `workspace-admin-operations` 分类管理 | `/v1/admin/categories*` | `/workspace/categories` | BE CRUD 集成；FE 表单 | 7.1,7.3,7.4 | 未开始 |
@@ -66,8 +66,8 @@
 | OPS-001 | 产品 | 运营统计日/周/月，默认 7/30 天 | `workspace-admin-operations` 运营统计 | `GET /v1/admin/ops/dashboard` | 时间粒度切换 | BE 参数测试；FE 联动 | 7.2,7.3,7.4 | 未开始 |
 | OPS-002 | 产品/前端 | 指标卡 + 趋势 + TopN + 活跃作者 | `workspace-admin-operations` 运营看板 | 聚合查询/DTO | ECharts 页面 | FE 图表适配测试 | 7.2,7.3,7.4 | 未开始 |
 | OPS-003 | 产品/前端 | 局部错误不影响其他模块 | `workspace-admin-operations` 降级 | 局部接口错误可返回 | 组件局部错误态 | FE 局部降级测试 | 7.3,7.4 | 未开始 |
-| API-001 | 后端/config | RESTful + `/v1` + 统一响应 | `auth-session-security` + 其他 specs | OpenAPI + Controller | `api/client` 封装 | 契约测试 | 2.1,2.2,2.3 | 进行中 |
-| API-002 | 后端/config | 请求头：`X-Request-ID`、`Idempotency-Key`、CSRF | `auth-session-security` | 统一拦截器/过滤器 | axios 请求拦截器 | 头注入与校验测试 | 2.2,3.1,5.2 | 未开始 |
+| API-001 | 后端/config | RESTful + `/v1` + 统一响应 | `auth-session-security` + 其他 specs | OpenAPI + Controller | `api/client` 封装 | 契约测试 | 2.1,2.2,2.3 | 已完成 |
+| API-002 | 后端/config | 请求头：`X-Request-ID`、`Idempotency-Key`、CSRF | `auth-session-security` | 统一拦截器/过滤器 | axios 请求拦截器 | 头注入与校验测试 | 2.2,3.1,5.2 | 进行中 |
 | API-003 | 后端 | 异常码映射（401/403/409/422/429） | `auth-session-security` + 其他 specs | 错误码枚举与抛出 | 错误消息映射 | BE 异常映射测试 | 1.1.3,2.1,3.5 | 进行中 |
 | ENV-001 | 你的新增要求 | 后端至少 dev/prod 两套配置 | `tasks` 环境要求 | `application-dev/prod.yml` | 无 | 启动验证 | 1.1.4 | 已完成 |
 | ENV-002 | 你的新增要求 | 前端至少 development/production 两套配置 | `tasks` 环境要求 | 无 | `.env.development/.env.production` | 构建验证 | 1.2.2,1.2.3 | 已完成 |

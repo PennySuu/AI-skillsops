@@ -60,8 +60,8 @@ node scripts/verify-traceability.mjs
 ## 2. API 契约与 OpenAPI（后端 / 前端 / 测试）
 
 - [x] 2.1 **后端**：按 `design.md` 接口表建立 **`/v1`** Controller 壳层 + DTO + Bean Validation；**SpringDoc** 生成 OpenAPI 3；JSON 示例与错误响应 schema 齐全
-- [ ] 2.2 **前端**：自 OpenAPI **生成或手维护** `types/` 与 `api/client` 封装（axios 实例：`withCredentials`、超时、`X-Request-ID`）；**development** 指向代理，**production** 指向 `VITE_API_BASE_URL`
-- [ ] 2.3 **测试**：契约快照或 **OpenAPI 校验测试**（如 schemathesis 可选）；前端对 **envelope** 解析做单元测试（mock axios 响应）
+- [x] 2.2 **前端**：自 OpenAPI **生成或手维护** `types/` 与 `api/client` 封装（axios 实例：`withCredentials`、超时、`X-Request-ID`）；**development** 指向代理，**production** 指向 `VITE_API_BASE_URL`
+- [x] 2.3 **测试**：契约快照或 **OpenAPI 校验测试**（如 schemathesis 可选）；前端对 **envelope** 解析做单元测试（mock axios 响应）
 
 ---
 
