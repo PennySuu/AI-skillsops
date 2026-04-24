@@ -61,11 +61,11 @@
 | WS-004 | 前端 | 菜单与路由同源（menu.config.ts） | `workspace-admin-operations` 菜单一致性 | 无 | 统一菜单配置 | FE 配置一致性测试 | 2.2,3.4,7.3 | 已完成 |
 | WS-005 | 产品 | 我的发布页（状态/编辑/提交/发布） | `workspace-admin-operations` 我的发布 | 相关 API 支撑 | `/workspace/published` 页面 | FE 页面流测试 | 4.4,4.6 | 已完成 |
 | WS-006 | 产品 | 我的安装页（版本、可更新、下架标） | `workspace-admin-operations` 我的安装 | `GET /v1/users/me/installs` | `/workspace/installed` 页面 | FE 渲染测试 | 5.3,5.5,5.6 | 已完成 |
-| CAT-001 | 产品/后端 | 分类管理 CRUD + 启停 | `workspace-admin-operations` 分类管理 | `/v1/admin/categories*` | `/workspace/categories` | BE CRUD 集成；FE 表单 | 7.1,7.3,7.4 | 进行中 |
-| CAT-002 | 产品 | 分类名唯一 | `workspace-admin-operations` 分类唯一性 | DB 唯一约束 + 409/422 | 重复名提示 | BE 重复名测试；FE 提示 | 7.1,7.3,7.4 | 进行中 |
-| OPS-001 | 产品 | 运营统计日/周/月，默认 7/30 天 | `workspace-admin-operations` 运营统计 | `GET /v1/admin/ops/dashboard` | 时间粒度切换 | BE 参数测试；FE 联动 | 7.2,7.3,7.4 | 进行中 |
-| OPS-002 | 产品/前端 | 指标卡 + 趋势 + TopN + 活跃作者 | `workspace-admin-operations` 运营看板 | 聚合查询/DTO | ECharts 页面 | FE 图表适配测试 | 7.2,7.3,7.4 | 进行中 |
-| OPS-003 | 产品/前端 | 局部错误不影响其他模块 | `workspace-admin-operations` 降级 | 局部接口错误可返回 | 组件局部错误态 | FE 局部降级测试 | 7.3,7.4 | 进行中 |
+| CAT-001 | 产品/后端 | 分类管理 CRUD + 启停 | `workspace-admin-operations` 分类管理 | `/v1/admin/categories*` | `/workspace/categories` | BE CRUD 集成；FE 表单 | 7.1,7.3,7.4 | 已完成 |
+| CAT-002 | 产品 | 分类名唯一 | `workspace-admin-operations` 分类唯一性 | DB 唯一约束 + 409/422 | 重复名提示 | BE 重复名测试；FE 提示 | 7.1,7.3,7.4 | 已完成 |
+| OPS-001 | 产品 | 运营统计日/周/月，默认 7/30 天 | `workspace-admin-operations` 运营统计 | `GET /v1/admin/ops/dashboard` | 时间粒度切换 | BE 参数测试；FE 联动 | 7.2,7.3,7.4 | 已完成 |
+| OPS-002 | 产品/前端 | 指标卡 + 趋势 + TopN + 活跃作者 | `workspace-admin-operations` 运营看板 | 聚合查询/DTO | ECharts 页面 | FE 图表适配测试 | 7.2,7.3,7.4 | 已完成 |
+| OPS-003 | 产品/前端 | 局部错误不影响其他模块 | `workspace-admin-operations` 降级 | 局部接口错误可返回 | 组件局部错误态 | FE 局部降级测试 | 7.3,7.4 | 已完成 |
 | API-001 | 后端/config | RESTful + `/v1` + 统一响应 | `auth-session-security` + 其他 specs | OpenAPI + Controller | `api/client` 封装 | 契约测试 | 2.1,2.2,2.3 | 已完成 |
 | API-002 | 后端/config | 请求头：`X-Request-ID`、`Idempotency-Key`、CSRF | `auth-session-security` | 统一拦截器/过滤器 | axios 请求拦截器 | 头注入与校验测试 | 2.2,3.1,5.2 | 已完成 |
 | API-003 | 后端 | 异常码映射（401/403/409/422/429） | `auth-session-security` + 其他 specs | 错误码枚举与抛出 | 错误消息映射 | BE 异常映射测试 | 1.1.3,2.1,3.5 | 已完成 |
