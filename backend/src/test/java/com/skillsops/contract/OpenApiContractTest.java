@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.skillsops.auth.mapper.UserAccountMapper;
 import com.skillsops.review.mapper.ReviewRecordMapper;
 import com.skillsops.skill.mapper.AuditRecordMapper;
+import com.skillsops.skill.mapper.InstallRecordMapper;
 import com.skillsops.skill.mapper.SkillMapper;
 import com.skillsops.skill.mapper.SkillVersionMapper;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,9 @@ class OpenApiContractTest {
 
     @MockBean
     private AuditRecordMapper auditRecordMapper;
+
+    @MockBean
+    private InstallRecordMapper installRecordMapper;
 
     @Test
     void should_exposeExpectedV1Paths_when_openApiGenerated() throws Exception {

@@ -2,13 +2,13 @@ package com.skillsops.skill.controller;
 
 import com.skillsops.common.api.doc.OpenApiExamples;
 import com.skillsops.common.api.dto.ApiResponse;
-import com.skillsops.common.api.error.ErrorCode;
-import com.skillsops.common.exception.BusinessException;
 import com.skillsops.skill.dto.CreateSkillRequest;
 import com.skillsops.skill.dto.CreateSkillVersionRequest;
+import com.skillsops.skill.dto.InstallCommandResponse;
 import com.skillsops.skill.dto.OfflineSkillRequest;
 import com.skillsops.skill.dto.UpdateSkillRequest;
 import com.skillsops.review.service.ReviewService;
+import com.skillsops.skill.service.InstallCommandService;
 import com.skillsops.skill.service.SkillLifecycleService;
 import jakarta.servlet.http.HttpServletRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,10 +38,15 @@ public class SkillController {
 
     private final SkillLifecycleService skillLifecycleService;
     private final ReviewService reviewService;
+    private final InstallCommandService installCommandService;
 
-    public SkillController(SkillLifecycleService skillLifecycleService, ReviewService reviewService) {
+    public SkillController(
+            SkillLifecycleService skillLifecycleService,
+            ReviewService reviewService,
+            InstallCommandService installCommandService) {
         this.skillLifecycleService = skillLifecycleService;
         this.reviewService = reviewService;
+        this.installCommandService = installCommandService;
     }
 
     @PostMapping
@@ -108,10 +113,11 @@ public class SkillController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "签发成功", content = @Content(schema = @Schema(implementation = ApiResponse.class), examples = @ExampleObject(value = "{\"success\":true,\"code\":\"OK\",\"message\":\"success\",\"data\":{\"command\":\"npx skills add <signed-url>\"}}"))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "409", description = "资源状态冲突", content = @Content(schema = @Schema(implementation = ApiResponse.class), examples = @ExampleObject(value = "{\"success\":false,\"code\":\"SKILL_OFFLINE_NOT_INSTALLABLE\",\"message\":\"该 Skill 已下架，暂不可安装\",\"data\":null}"))),
     })
-    public ResponseEntity<ApiResponse<Void>> issueInstallCommand(
+    public ResponseEntity<ApiResponse<InstallCommandResponse>> issueInstallCommand(
             @PathVariable @Positive Long skillId,
-            @Parameter(description = "幂等键", required = true) @RequestHeader("Idempotency-Key") @NotBlank String idempotencyKey) {
-        throw todo();
+            @Parameter(description = "幂等键", required = true) @RequestHeader("Idempotency-Key") @NotBlank String idempotencyKey,
+            HttpServletRequest request) {
+        return ResponseEntity.ok(ApiResponse.ok(installCommandService.issueInstallCommand(skillId, idempotencyKey, request)));
     }
 
     @PostMapping("/{skillId}/offline")
@@ -128,7 +134,4 @@ public class SkillController {
         return ResponseEntity.ok(ApiResponse.okEmpty());
     }
 
-    private BusinessException todo() {
-        return new BusinessException(ErrorCode.OPERATION_FAILED, "接口壳层已就绪，业务实现将在后续任务补齐");
-    }
 }
