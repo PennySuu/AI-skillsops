@@ -40,11 +40,11 @@
 | MKT-004 | 产品 | 安装仅复制命令，不执行脚本 | `market-install-rating` 安装方式 | 安装命令签发接口 | 复制命令按钮 | FE clipboard 测试 | 5.2,5.5,5.6 | 已完成 |
 | MKT-005 | 产品/后端 | 安装命令短时签名、短TTL、单次可用 | `market-install-rating` 安装命令签发 | `POST /v1/skills/{skillId}/install-command` | 复制结果提示 | BE 过期/重复消费测试 | 5.2,5.5,5.6 | 已完成 |
 | MKT-006 | 产品 | 下架后市场不可见 | `market-install-rating` 下架可见性 | 下架状态过滤 | 列表不可见分支 | E2E 下架后不可见 | 5.1,5.4,5.6 | 已完成 |
-| MKT-007 | 产品/后端 | 下架后已安装可查看但不可装历史版本 | `market-install-rating` + `skill-lifecycle-review` | 安装接口返回 `409 SKILL_OFFLINE_NOT_INSTALLABLE` | 我的安装显示“已下架”、禁安装 | BE 错误码测试；FE 按钮禁用 | 5.2,5.3,5.5,6.3 | 进行中 |
+| MKT-007 | 产品/后端 | 下架后已安装可查看但不可装历史版本 | `market-install-rating` + `skill-lifecycle-review` | 安装接口返回 `409 SKILL_OFFLINE_NOT_INSTALLABLE` | 我的安装显示“已下架”、禁安装 | BE 错误码测试；FE 按钮禁用 | 5.2,5.3,5.5,6.3 | 已完成 |
 | MKT-008 | 产品 | 详情安装量/均分写后 <=5s | `market-install-rating` 近实时口径 | 写后失效+回查 | 详情页刷新策略 | E2E 轮询断言 | 6.1,6.2,6.3,8.4 | 进行中 |
-| RAT-001 | 产品 | 仅安装后可评分 | `market-install-rating` 评分前置条件 | `422 RATING_REQUIRES_INSTALL` | 评分入口拦截 | BE 未安装拒绝；FE 引导 | 6.1,6.2,6.3 | 进行中 |
-| RAT-002 | 产品 | 一人一评，可修改 | `market-install-rating` 评分更新 | `uk_user_skill` + update | 评分编辑覆盖 | BE upsert；FE 回显更新 | 6.1,6.2,6.3 | 进行中 |
-| RAT-003 | 产品 | 评分允许仅打分不评论 | `market-install-rating` 评分规则 | comment 可空 | comment 非必填 | BE 空comment；FE 表单 | 6.1,6.2,6.3 | 进行中 |
+| RAT-001 | 产品 | 仅安装后可评分 | `market-install-rating` 评分前置条件 | `422 RATING_REQUIRES_INSTALL` | 评分入口拦截 | BE 未安装拒绝；FE 引导 | 6.1,6.2,6.3 | 已完成 |
+| RAT-002 | 产品 | 一人一评，可修改 | `market-install-rating` 评分更新 | `uk_user_skill` + update | 评分编辑覆盖 | BE upsert；FE 回显更新 | 6.1,6.2,6.3 | 已完成 |
+| RAT-003 | 产品 | 评分允许仅打分不评论 | `market-install-rating` 评分规则 | comment 可空 | comment 非必填 | BE 空comment；FE 表单 | 6.1,6.2,6.3 | 已完成 |
 | LIFE-001 | 产品/后端 | 状态机 draft/pending/published/offline | `skill-lifecycle-review` 状态机 | 状态机约束与迁移 | 状态 Tag 显示 | BE 状态迁移单测 | 4.1,4.6 | 已完成 |
 | LIFE-002 | 产品 | 审核中不可编辑 | `skill-lifecycle-review` 审核中禁改 | PATCH 拒绝 | 编辑入口禁用提示 | BE 拒绝写入；FE 禁用态 | 4.1,4.2,4.4,4.6 | 已完成 |
 | LIFE-003 | 后端 | 创建 Skill 草稿 resourceUrl 必填 | `skill-lifecycle-review` 创建与校验 | `POST /v1/skills` + 422 | 创建表单必填校验 | BE 422 测试；FE 校验 | 4.2,4.4,4.6 | 已完成 |
