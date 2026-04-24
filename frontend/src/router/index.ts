@@ -54,6 +54,18 @@ const router = createRouter({
       meta: { requiresAuth: true } satisfies AppRouteMeta,
     },
     {
+      path: '/workspace/categories',
+      name: 'workspaceCategories',
+      component: () => import('@/views/WorkspaceCategoriesView.vue'),
+      meta: { requiresAuth: true, roles: ['ADMIN'] } satisfies AppRouteMeta,
+    },
+    {
+      path: '/workspace/ops',
+      name: 'workspaceOps',
+      component: () => import('@/views/WorkspaceOpsView.vue'),
+      meta: { requiresAuth: true, roles: ['ADMIN'] } satisfies AppRouteMeta,
+    },
+    {
       path: '/403',
       name: 'forbidden',
       component: () => import('@/views/ForbiddenView.vue'),

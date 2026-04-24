@@ -53,6 +53,59 @@ export interface UpsertRatingPayload {
   comment?: string
 }
 
+export interface CategoryItemDTO {
+  id: number
+  name: string
+  enabled: boolean
+}
+
+export interface CreateCategoryPayload {
+  name: string
+  enabled: boolean
+}
+
+export interface UpdateCategoryPayload {
+  name: string
+}
+
+export interface PatchCategoryStatusPayload {
+  enabled: boolean
+}
+
+export type OpsGranularity = 'day' | 'week' | 'month'
+
+export interface OpsMetricCardDTO {
+  key: string
+  label: string
+  value: number
+}
+
+export interface OpsTrendPointDTO {
+  bucket: string
+  installs: number
+}
+
+export interface OpsTopSkillDTO {
+  skillId: number
+  skillName: string
+  installCount: number
+}
+
+export interface OpsActiveAuthorDTO {
+  authorId: number
+  username: string
+  publishedCount: number
+}
+
+export interface OpsDashboardDTO {
+  granularity: OpsGranularity
+  days: number
+  metrics: OpsMetricCardDTO[]
+  installTrend: OpsTrendPointDTO[]
+  topSkills: OpsTopSkillDTO[]
+  activeAuthors: OpsActiveAuthorDTO[]
+}
+
 export type UserRole = 'USER' | 'ADMIN'
 
 export interface AuthProfileDTO {

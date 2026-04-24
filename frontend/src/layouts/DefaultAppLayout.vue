@@ -28,6 +28,8 @@ const menuOptions = computed(() => {
   ]
   if (authStore.role === 'ADMIN') {
     common.push({ label: '待审核', key: '/workspace/reviews' })
+    common.push({ label: '分类管理', key: '/workspace/categories' })
+    common.push({ label: '运营看板', key: '/workspace/ops' })
   }
   return common
 })

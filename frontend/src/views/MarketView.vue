@@ -118,16 +118,15 @@ onMounted(() => {
         type="error"
       >
         {{ errorMessage }}
-        <template #action>
-          <n-button
-            text
-            type="primary"
-            @click="loadMarketList"
-          >
-            重试
-          </n-button>
-        </template>
       </n-alert>
+      <n-button
+        v-if="errorMessage"
+        tertiary
+        type="primary"
+        @click="loadMarketList"
+      >
+        重试
+      </n-button>
 
       <n-spin :show="loading">
         <n-grid
